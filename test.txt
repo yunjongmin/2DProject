@@ -1,0 +1,16 @@
+http://blog.daum.net/kim1124mgxld/22
+http://mobicon.tistory.com/162
+http://blog.daum.net/kim1124mgxld/22
+
+https://github.com/yunjongmin/
+
+cd F:\PythonProject
+git init
+git status
+git add .
+git status
+git commit -m 'resource add'
+git remote add origin https://github.com/yunjongmin/2DProject.git
+git push origin master
+
+heroku key:add
