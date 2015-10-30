@@ -4,6 +4,7 @@ import os
 
 from pico2d import *
 from math import *
+from turtle import *
 
 import game_framework
 
@@ -21,6 +22,8 @@ monster2 = None
 mid_monster1 = None
 boss_monster1 = None
 missile1 = None
+monster_missile1 = None
+mid_monster_missile1 = None
 obstacle1 = None
 special1 = None
 r = 100
@@ -51,6 +54,7 @@ class Player:
     moveLeft = None
     moveUp = None
     moveDown = None
+    # collisionX1, collisionY1, collisionX2, collisionY2
 
     def __init__(self):
         self.x, self.y = 270, 200
@@ -94,6 +98,8 @@ class Monster1:
         else:
             self.y = CANVAS_HEIGHT
 
+        monster_missile1.showMissile(self.x, self.y)
+
     def draw(self):
         self.image.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
 
@@ -133,6 +139,8 @@ class MidMonster1:
             self.y = self.y - 3
         else:
             self.y = CANVAS_HEIGHT
+
+        mid_monster_missile1.showMissile(self.x, self.y)
 
     def draw(self):
          self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
@@ -201,6 +209,90 @@ class Missile1:
         while(i < MISSILE_MAX):
             if self.show[i] == True:
                 self.image.clip_draw(self.frame * 97, 0, 97, 135, self.x[i] + 2, self.y[i]+ 110)
+            i += 1
+
+class MonsterMissile1:
+    image = None
+
+    def __init__(self):
+        self.frame = 0
+        self.x = [0]*MISSILE_MAX
+        self.y= [0]*MISSILE_MAX
+        self.show= [0]*MISSILE_MAX
+
+        if MonsterMissile1.image == None:
+            MonsterMissile1.image = load_image('Resource/monster_missile1.png')
+
+    def showMissile(self, showX, showY):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == False:
+                    self.show[i] = True
+                    self.x[i] = showX
+                    self.y[i] = showY
+                    break
+            i += 1
+
+    def update(self):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == True:
+                    if self.y[i] > 0:
+                        self.y[i] -= 20
+                    else:
+                        self.show[i] = False
+            i += 1
+
+    def draw(self):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == True:
+                    self.image.clip_draw(self.frame * 15, 0, 15, 9, self.x[i] - 2, self.y[i] - 30)
+            i += 1
+
+class MidMonsterMissile1:
+    image = None
+
+    def __init__(self):
+        self.frame = 1
+        self.x = [0]*MISSILE_MAX
+        self.y= [0]*MISSILE_MAX
+        self.show= [0]*MISSILE_MAX
+
+        if MidMonsterMissile1.image == None:
+            MidMonsterMissile1.image = load_image('Resource/monster_missile1.png')
+
+    def showMissile(self, showX, showY):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == False:
+                    self.show[i] = True
+                    self.x[i] = showX
+                    self.y[i] = showY
+                    break
+            i += 1
+
+    def update(self):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == True:
+                    if self.y[i] > 0:
+                        self.y[i] -= 20
+                    else:
+                        self.show[i] = False
+            i += 1
+
+    def draw(self):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == True:
+                    self.image.clip_draw(self.frame * 15, 0, 15, 9, self.x[i] - 2, self.y[i] - 30)
             i += 1
 
 class Obstacle1:
@@ -272,6 +364,8 @@ def enter():
     global monster2
     global mid_monster1
     global missile1
+    global monster_missile1
+    global mid_monster_missile1
     global boss_monster1
     global obstacle1
     global special1
@@ -282,6 +376,8 @@ def enter():
     mid_monster1 = MidMonster1()
     boss_monster1 = BossMonster1()
     missile1 =  Missile1()
+    monster_missile1 = MonsterMissile1()
+    mid_monster_missile1 = MidMonsterMissile1()
     obstacle1 = Obstacle1()
     special1 = Special1()
     pass
@@ -295,6 +391,8 @@ def exit():
     global mid_monster1
     global boss_monster1
     global missile1
+    global monster_missile1
+    global mid_monster_missile1
     global obstacle1
     global special1
 
@@ -305,6 +403,8 @@ def exit():
     del(mid_monster1)
     del(boss_monster1)
     del(missile1)
+    del(monster_missile1)
+    del(mid_monster_missile1)
     del(obstacle1)
     del(special1)
     pass
@@ -364,6 +464,8 @@ def update():
     mid_monster1.update()
     boss_monster1.update()
     missile1.update()
+    monster_missile1.update()
+    mid_monster_missile1.update()
     special1.update()
     obstacle1.update()
     player.update()
@@ -379,6 +481,8 @@ def draw():
     mid_monster1.draw()
     boss_monster1.draw()
     missile1.draw()
+    monster_missile1.draw()
+    mid_monster_missile1.draw()
     special1.draw()
     obstacle1.draw()
     player.draw()
