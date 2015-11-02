@@ -4,7 +4,8 @@ import os
 
 from pico2d import *
 from math import *
-from turtle import *
+# from turtle import *
+import turtle
 
 import game_framework
 
@@ -12,6 +13,7 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 1000
 MISSILE_MAX = 100
 SPECIAL_MAX = 3
+COLLISION_AREA_3 = 3
 
 name = "MainState"
 
@@ -54,13 +56,20 @@ class Player:
     moveLeft = None
     moveUp = None
     moveDown = None
-    # collisionX1, collisionY1, collisionX2, collisionY2
+    collisionArea = None
 
     def __init__(self):
         self.x, self.y = 270, 200
         self.frame = 0
         if Player.image == None:
             Player.image = load_image('Resource/character1.png')
+        if Player.collisionArea == None:
+            Player.collisionArea = load_image('Resource/rect_area.png')
+
+        self.collisionX1 = [0]*COLLISION_AREA_3
+        self.collisionY1= [0]*COLLISION_AREA_3
+        self.collisionX2 = [0]*COLLISION_AREA_3
+        self.collisionY2= [0]*COLLISION_AREA_3
 
     def update(self):
         self.frame = (self.frame + 1) % 3
@@ -79,17 +88,49 @@ class Player:
             if self.y > 10 :
                 self.y -= 10
 
+        self.showArea();
+
     def draw(self):
         self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
 
+    def showArea(self):
+        self.collisionArea.clip_draw(0, 0, 40, 100, self.x, self.y+10)
+        self.collisionArea.clip_draw(0, 0, 60, 40, self.x-40, self.y+8)
+        self.collisionArea.clip_draw(0, 0, 60, 40, self.x+40, self.y+8)
+
+        self.collisionX1[0] = self.x - 20
+        self.collisionY1[0] = (self.y+10) + 50
+        self.collisionX2[0] = self.x + 20
+        self.collisionY2[0] = (self.y+10) - 50
+
+        self.collisionX1[1] = (self.x-40) - 30
+        self.collisionY1[1] = (self.y+8) + 20
+        self.collisionX2[1] = (self.x-40) + 30
+        self.collisionY2[1] = (self.y+8) - 20
+
+        self.collisionX1[2] = (self.x+40) - 30
+        self.collisionY1[2] = (self.y+8) + 20
+        self.collisionX2[2] = (self.x+40) + 30
+        self.collisionY2[2] = (self.y+8) - 20
+
+
+
 class Monster1:
     image = None
+    collisionArea = None
 
     def __init__(self):
         self.x, self.y = 120, 800
         self.frame = random.randint(0, 3)
         if Monster1.image == None:
             Monster1.image = load_image('Resource/monster1.png')
+        if Monster1.collisionArea == None:
+            Monster1.collisionArea = load_image('Resource/rect_area.png')
+
+        self.collisionX1 = [0]*COLLISION_AREA_3
+        self.collisionY1= [0]*COLLISION_AREA_3
+        self.collisionX2 = [0]*COLLISION_AREA_3
+        self.collisionY2= [0]*COLLISION_AREA_3
 
     def update(self):
         self.frame = (self.frame + 1) % 3
@@ -103,8 +144,29 @@ class Monster1:
     def draw(self):
         self.image.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
 
+    def showArea(self):
+        self.collisionArea.clip_draw(0, 0, 20, 40, self.x, self.y)
+        self.collisionArea.clip_draw(0, 0, 14, 14, self.x-18, self.y)
+        self.collisionArea.clip_draw(0, 0, 14, 14, self.x+18, self.y)
+
+        self.collisionX1[0] = (self.x) - 10
+        self.collisionY1[0] = (self.y) + 20
+        self.collisionX2[0] = (self.x) + 10
+        self.collisionY2[0] = (self.y) - 20
+
+        self.collisionX1[1] = (self.x-18) - 7
+        self.collisionY1[1] = (self.y) + 7
+        self.collisionX2[1] = (self.x-18) + 7
+        self.collisionY2[1] = (self.y) - 7
+
+        self.collisionX1[2] = (self.x+18) - 7
+        self.collisionY1[2] = (self.y) + 7
+        self.collisionX2[2] = (self.x+18) + 7
+        self.collisionY2[2] = (self.y) - 7
+
 class Monster2:
     image = None
+    collisionArea = None
 
     def __init__(self):
         self.x, self.y = 720, 800
@@ -112,6 +174,13 @@ class Monster2:
         self.frame = random.randint(0, 3)
         if Monster2.image == None:
             Monster2.image = load_image('Resource/monster2.png')
+        if Monster2.collisionArea == None:
+            Monster2.collisionArea = load_image('Resource/rect_area.png')
+
+        self.collisionX1 = [0]*COLLISION_AREA_3
+        self.collisionY1= [0]*COLLISION_AREA_3
+        self.collisionX2 = [0]*COLLISION_AREA_3
+        self.collisionY2= [0]*COLLISION_AREA_3
 
     def update(self):
         self.frame = (self.frame + 1) % 3
@@ -124,14 +193,42 @@ class Monster2:
     def draw(self):
         self.image.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
 
+    def showArea(self):
+        self.collisionArea.clip_draw(0, 0, 20, 40, self.x, self.y)
+        self.collisionArea.clip_draw(0, 0, 14, 14, self.x-18, self.y)
+        self.collisionArea.clip_draw(0, 0, 14, 14, self.x+18, self.y)
+
+        self.collisionX1[0] = (self.x) - 10
+        self.collisionY1[0] = (self.y) + 20
+        self.collisionX2[0] = (self.x) + 10
+        self.collisionY2[0] = (self.y) - 20
+
+        self.collisionX1[1] = (self.x-18) - 7
+        self.collisionY1[1] = (self.y) + 7
+        self.collisionX2[1] = (self.x-18) + 7
+        self.collisionY2[1] = (self.y) - 7
+
+        self.collisionX1[2] = (self.x+18) - 7
+        self.collisionY1[2] = (self.y) + 7
+        self.collisionX2[2] = (self.x+18) + 7
+        self.collisionY2[2] = (self.y) - 7
+
 class MidMonster1:
     image = None
+    collisionArea = None
 
     def __init__(self):
         self.x, self.y = 270, 700
         self.frame = random.randint(0, 3)
         if MidMonster1.image == None:
             MidMonster1.image = load_image('Resource/mid_boss1.png')
+        if MidMonster1.collisionArea == None:
+            MidMonster1.collisionArea = load_image('Resource/rect_area.png')
+
+        self.collisionX1 = [0]*COLLISION_AREA_3
+        self.collisionY1= [0]*COLLISION_AREA_3
+        self.collisionX2 = [0]*COLLISION_AREA_3
+        self.collisionY2= [0]*COLLISION_AREA_3
 
     def update(self):
         self.frame = (self.frame + 1) % 3
@@ -144,6 +241,26 @@ class MidMonster1:
 
     def draw(self):
          self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
+
+    def showArea(self):
+        self.collisionArea.clip_draw(0, 0, 70, 120, self.x, self.y)
+        self.collisionArea.clip_draw(0, 0, 36, 40, self.x-54, self.y)
+        self.collisionArea.clip_draw(0, 0, 36, 40, self.x+54, self.y)
+
+        self.collisionX1[0] = (self.x) - 35
+        self.collisionY1[0] = (self.y) + 60
+        self.collisionX2[0] = (self.x) + 35
+        self.collisionY2[0] = (self.y) - 60
+
+        self.collisionX1[1] = (self.x-54) - 18
+        self.collisionY1[1] = (self.y) + 20
+        self.collisionX2[1] = (self.x-54) + 18
+        self.collisionY2[1] = (self.y) - 20
+
+        self.collisionX1[2] = (self.x+54) - 18
+        self.collisionY1[2] = (self.y) + 20
+        self.collisionX2[2] = (self.x+54) + 18
+        self.collisionY2[2] = (self.y) - 20
 
 class BossMonster1:
     image = None
@@ -213,6 +330,7 @@ class Missile1:
 
 class MonsterMissile1:
     image = None
+    collisionArea = None
 
     def __init__(self):
         self.frame = 0
@@ -222,6 +340,13 @@ class MonsterMissile1:
 
         if MonsterMissile1.image == None:
             MonsterMissile1.image = load_image('Resource/monster_missile1.png')
+        if MonsterMissile1.collisionArea == None:
+            MonsterMissile1.collisionArea = load_image('Resource/rect_area.png')
+
+        self.collisionX1 = [0]*MISSILE_MAX
+        self.collisionY1= [0]*MISSILE_MAX
+        self.collisionX2 = [0]*MISSILE_MAX
+        self.collisionY2= [0]*MISSILE_MAX
 
     def showMissile(self, showX, showY):
         i = 0
@@ -251,6 +376,18 @@ class MonsterMissile1:
             if i % 10 == 0:
                 if self.show[i] == True:
                     self.image.clip_draw(self.frame * 15, 0, 15, 9, self.x[i] - 2, self.y[i] - 30)
+            i += 1
+
+    def showArea(self):
+        i = 0
+        while(i < MISSILE_MAX):
+            if i % 10 == 0:
+                if self.show[i] == True:
+                    self.collisionArea.clip_draw(0, 0, 4, 4, self.x[i] - 2, self.y[i] - 30)
+                    self.collisionX1[i] = (self.x[i]-2) - 2
+                    self.collisionY1[i] = (self.y[i]-30) + 2
+                    self.collisionX2[i] = (self.x[i]-2) + 2
+                    self.collisionY2[i] = (self.y[i]-30) - 2
             i += 1
 
 class MidMonsterMissile1:
@@ -486,6 +623,13 @@ def draw():
     special1.draw()
     obstacle1.draw()
     player.draw()
+
+    player.showArea()
+    monster1.showArea()
+    monster2.showArea()
+    mid_monster1.showArea()
+    monster_missile1.showArea()
+
     update_canvas()
     pass
 
