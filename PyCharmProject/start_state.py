@@ -24,7 +24,7 @@ def exit():
     pass
 
 
-def update():
+def update(frame_time):
     global logo_time
 
     if(logo_time > 1.0):
@@ -36,7 +36,7 @@ def update():
     pass
 
 
-def draw():
+def draw(frame_time):
     global image
     clear_canvas()
     image.draw(400, 500)
@@ -46,7 +46,7 @@ def draw():
 
 
 
-def handle_events():
+def handle_events(frame_time):
     events = get_events()
     pass
 

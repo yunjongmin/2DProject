@@ -39,7 +39,7 @@ class Background:
         self.image1 = self.image
         self.image2 = self.image
 
-    def update(self):
+    def update(self, frame_time):
         if self.y > -CANVAS_HEIGHT/2 + 10:
             self.y -= 5
         else:
@@ -80,9 +80,7 @@ class Background:
 #
 #
 
-
-
-def enter():
+def create_world():
     global background
     global player
     global monsters
@@ -91,6 +89,7 @@ def enter():
     # global boss_monster1
     global obstacle
     global player_special_missile
+
     background = Background()
     player = player_class.Player()
     monsters = [enemy_class.Monster() for i in range(5)]
@@ -99,10 +98,9 @@ def enter():
     player_missile =  player_class.PlayerMissile()
     obstacle = obstacle_class.Obstacle1()
     player_special_missile = player_class.SpecialMissile()
-    pass
 
 
-def exit():
+def destroy_world():
     global background
     global player
     global monsters
@@ -120,7 +118,15 @@ def exit():
     del(player_missile)
     del(obstacle)
     del(player_special_missile)
-    pass
+
+
+def enter():
+    game_framework.reset_time()
+    create_world()
+
+
+def exit():
+    destroy_world()
 
 
 def pause():
@@ -131,61 +137,38 @@ def resume():
     pass
 
 
-def handle_events():
+def handle_events(frame_time):
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
            game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_LEFT:
-            if player.moveRight == True:
-                player.moveRight = False
-            player.moveLeft = True
-        elif event.type == SDL_KEYUP and event.key == SDLK_LEFT:
-                player.moveLeft = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_RIGHT :
-            if player.moveLeft == True:
-                player.moveLeft = False
-            player.moveRight = True
-        elif event.type == SDL_KEYUP and event.key == SDLK_RIGHT:
-            player.moveRight = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_UP :
-            if player.moveDown == True:
-                player.moveDown = False
-            player.moveUp = True
-        elif event.type == SDL_KEYUP and event.key == SDLK_UP:
-            player.moveUp = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_DOWN :
-            if player.moveUp == True:
-                player.moveUp = False
-            player.moveDown = True
-        elif event.type == SDL_KEYUP and event.key == SDLK_DOWN:
-            player.moveDown = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_z:
             player_missile.showMissile(player.x, player.y)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_x:
             player_special_missile.showSpecial(player.x, player.y)
-
+        else:
+            player.handle_event(event)
     pass
 
 
-def update():
-    background.update()
+def update(frame_time):
+    background.update(frame_time)
     for monster in monsters:
-        monster.update()
+        monster.update(frame_time)
     for mid_monster in mid_monsters:
-        mid_monster.update()
+        mid_monster.update(frame_time)
     # boss_monster1.update()
-    player_missile.update()
-    player_special_missile.update()
-    obstacle.update()
-    player.update()
+    player_missile.update(frame_time)
+    player_special_missile.update(frame_time)
+    obstacle.update(frame_time)
+    player.update(frame_time)
     delay(0.1)
     pass
 
 
-def draw():
+def draw(frame_time):
     clear_canvas()
     background.draw()
     for monster in monsters:

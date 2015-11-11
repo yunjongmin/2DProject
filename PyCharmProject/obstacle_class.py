@@ -18,7 +18,7 @@ class Obstacle1:
         self.collisionX2 = [0]
         self.collisionY2= [0]
 
-    def update(self):
+    def update(self, frame_time):
         if self.y > 0 :
             self.y = self.y - 20
         else:

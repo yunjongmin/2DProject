@@ -11,8 +11,18 @@ MISSILE_POWER_2 = 2
 SPECIAL_MAX = 3
 SPECIAL_MISSILE_A = 1
 
+PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 class Player:
+    FLY_SPEED_KMPH = 30.0                    # Km / Hour
+    FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
+    FLY_SPEED_MPS = (FLY_SPEED_MPM / 60.0)
+    FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
+
+
     image = None
     moveRight = None
     moveLeft = None
@@ -29,22 +39,28 @@ class Player:
         self.collisionX2 = [0]*COLLISION_AREA_3
         self.collisionY2= [0]*COLLISION_AREA_3
 
-    def update(self):
-        self.frame = (self.frame + 1) % 3
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
+    def update(self, frame_time):
+        self.life_time += frame_time
+        distance = Player.FLY_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+        self.frame = int(self.total_frames) % 3
 
         if self.moveRight:
-            if self.x < CANVAS_WIDTH - 10:
-                self.x += 10
+            if self.x < CANVAS_WIDTH - distance:
+                self.x += distance
         elif self.moveLeft:
-            if self.x > 10 :
-                self.x -= 10
+            if self.x > distance :
+                self.x -= distance
 
         if self.moveUp:
-            if self.y < CANVAS_HEIGHT -10 :
-                self.y += 10
+            if self.y < CANVAS_HEIGHT - distance :
+                self.y += distance
         elif self.moveDown:
-            if self.y > 10 :
-                self.y -= 10
+            if self.y > distance :
+                self.y -= distance
 
         self.showArea();
 
@@ -68,8 +84,38 @@ class Player:
         draw_rectangle(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
         draw_rectangle(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
 
+    def handle_event(self, event):
+        if event.type == SDL_KEYDOWN and event.key == SDLK_LEFT:
+            if self.moveRight == True:
+                self.moveRight = False
+            self.moveLeft = True
+        elif event.type == SDL_KEYUP and event.key == SDLK_LEFT:
+                self.moveLeft = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_RIGHT :
+            if self.moveLeft == True:
+                self.moveLeft = False
+            self.moveRight = True
+        elif event.type == SDL_KEYUP and event.key == SDLK_RIGHT:
+            self.moveRight = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_UP :
+            if self.moveDown == True:
+                self.moveDown = False
+            self.moveUp = True
+        elif event.type == SDL_KEYUP and event.key == SDLK_UP:
+            self.moveUp = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_DOWN :
+            if self.moveUp == True:
+                self.moveUp = False
+            self.moveDown = True
+        elif event.type == SDL_KEYUP and event.key == SDLK_DOWN:
+            self.moveDown = False
 
 class PlayerMissile:
+    PLAYER_MISSILE_SPEED_KMPH = 20.0                    # Km / Hour
+    PLAYER_MISSILE_SPEED_MPM = (PLAYER_MISSILE_SPEED_KMPH * 1000.0 / 60.0)
+    PLAYER_MISSILE_SPEED_MPS = (PLAYER_MISSILE_SPEED_MPM / 60.0)
+    PLAYER_MISSILE_SPEED_PPS = (PLAYER_MISSILE_SPEED_MPS * PIXEL_PER_METER)
+
     image = None
     power = MISSILE_POWER_1
 
@@ -86,6 +132,9 @@ class PlayerMissile:
         self.collisionX2 = [0]*MISSILE_MAX
         self.collisionY2= [0]*MISSILE_MAX
 
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
     def showMissile(self, showX, showY):
         i = 0
         while(i < MISSILE_MAX):
@@ -96,12 +145,16 @@ class PlayerMissile:
                 break
             i += 1
 
-    def update(self):
+    def update(self, frame_time):
+        self.life_time += frame_time
+        distance = PlayerMissile.PLAYER_MISSILE_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+
         i = 0
         while(i < MISSILE_MAX):
             if self.show[i] == True:
                 if self.y[i] < CANVAS_HEIGHT:
-                    self.y[i] += 10
+                    self.y[i] += distance
                 else:
                     self.show[i] = False
             i += 1
@@ -129,6 +182,11 @@ class PlayerMissile:
 
 
 class SpecialMissile:
+    PLAYER_SPECIAL_MISSILE_SPEED_KMPH = 13.0                    # Km / Hour
+    PLAYER_SPECIAL_MISSILE_SPEED_MPM = (PLAYER_SPECIAL_MISSILE_SPEED_KMPH * 1000.0 / 60.0)
+    PLAYER_SPECIAL_MISSILE_SPEED_MPS = (PLAYER_SPECIAL_MISSILE_SPEED_MPM / 60.0)
+    PLAYER_SPECIAL_MISSILE_SPEED_PPS = (PLAYER_SPECIAL_MISSILE_SPEED_MPS * PIXEL_PER_METER)
+
     image = None
     special_power = SPECIAL_MISSILE_A
     def __init__(self):
@@ -149,6 +207,9 @@ class SpecialMissile:
         self.collisionX2 = [0]*SPECIAL_MAX
         self.collisionY2= [0]*SPECIAL_MAX
 
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
     def showSpecial(self, showX, showY):
         i = 0
         while(i < SPECIAL_MAX):
@@ -159,13 +220,18 @@ class SpecialMissile:
                     break
                 i += 1
 
-    def update(self):
+    def update(self, frame_time):
+        self.life_time += frame_time
+        distance = SpecialMissile.PLAYER_SPECIAL_MISSILE_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+
         i = 0
         while(i < SPECIAL_MAX):
             if self.show[i] == True:
                 if self.y[i] < CANVAS_HEIGHT:
-                    self.y[i] += 10
-                    self.frame[i] = (self.frame[i] + 1) % 3
+                    self.y[i] += distance
+                    # self.frame[i] = (self.frame[i] + 1) % 3
+                    self.frame[i] = int(self.total_frames) % 3
                 else:
                     self.show[i] = False
             i += 1

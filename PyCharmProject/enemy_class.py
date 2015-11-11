@@ -47,7 +47,7 @@ class Monster:
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
 
-    def update(self):
+    def update(self, frame_time):
         # 몬스터
         self.frame = (self.frame + 1) % 3
         if self.y > 0 :
@@ -161,7 +161,7 @@ class MidMonster:
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
 
-    def update(self):
+    def update(self, frame_time):
         # 몬스터
         self.frame = (self.frame + 1) % 3
         if self.y > 0 :
