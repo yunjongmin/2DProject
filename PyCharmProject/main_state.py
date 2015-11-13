@@ -96,7 +96,7 @@ def create_world():
     mid_monsters = [enemy_class.MidMonster() for i in range(2)]
     # boss_monster1 = BossMonster1()
     player_missile =  player_class.PlayerMissile()
-    obstacle = obstacle_class.Obstacle1()
+    obstacle = obstacle_class.Obstacle()
     player_special_missile = player_class.SpecialMissile()
 
 

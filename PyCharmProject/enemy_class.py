@@ -12,8 +12,23 @@ MONSTER_MISSILE_POWER_1 = 0
 MONSTER_MISSILE_POWER_2 = 1
 MID_MONSTER_LIMIT_MOVE = 100
 
+PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
+
 
 class Monster:
+    FLY_SPEED_KMPH = 10.0                    # Km / Hour
+    FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
+    FLY_SPEED_MPS = (FLY_SPEED_MPM / 60.0)
+    FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
+
+    MISSILE_SPEED_KMPH = 20.0                    # Km / Hour
+    MISSILE_SPEED_MPM = (MISSILE_SPEED_KMPH * 1000.0 / 60.0)
+    MISSILE_SPEED_MPS = (MISSILE_SPEED_MPM / 60.0)
+    MISSILE_SPEED_PPS = (MISSILE_SPEED_MPS * PIXEL_PER_METER)
+
     image_blue = None
     image_pink = None
     image_missile = None
@@ -47,22 +62,32 @@ class Monster:
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
 
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
     def update(self, frame_time):
         # 몬스터
-        self.frame = (self.frame + 1) % 3
+        self.life_time += frame_time
+        distance = Monster.FLY_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+        self.frame = int(self.total_frames) % 3
+        # self.frame = (self.frame + 1) % 3
         if self.y > 0 :
-            self.y = self.y - 5
+            self.y = self.y - distance
         else:
             self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), CANVAS_HEIGHT
 
         self.showMissile(self.x, self.y)
 
         # 미사일
+        self.life_time += frame_time
+        distance = Monster.MISSILE_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
         i = 0
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
                 if self.missile_y[i] > 0:
-                    self.missile_y[i] -= 20
+                    self.missile_y[i] -= distance
                 else:
                     self.missile_show[i] = False
             i += 1
@@ -126,6 +151,16 @@ class Monster:
 
 
 class MidMonster:
+    FLY_SPEED_KMPH = 13.0                    # Km / Hour
+    FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
+    FLY_SPEED_MPS = (FLY_SPEED_MPM / 60.0)
+    FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
+
+    MISSILE_SPEED_KMPH = 24.0                    # Km / Hour
+    MISSILE_SPEED_MPM = (MISSILE_SPEED_KMPH * 1000.0 / 60.0)
+    MISSILE_SPEED_MPS = (MISSILE_SPEED_MPM / 60.0)
+    MISSILE_SPEED_PPS = (MISSILE_SPEED_MPS * PIXEL_PER_METER)
+
     image_red = None
     image_missile = None
 
@@ -161,13 +196,20 @@ class MidMonster:
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
 
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
     def update(self, frame_time):
         # 몬스터
-        self.frame = (self.frame + 1) % 3
+        self.life_time += frame_time
+        distance = MidMonster.FLY_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+        self.frame = int(self.total_frames) % 3
+        # self.frame = (self.frame + 1) % 3
         if self.y > 0 :
             if self.rightMove == True:
-                self.x = self.x + 3
-                self.moveX = self.moveX + 3
+                self.x = self.x + distance
+                self.moveX = self.moveX + distance
                 if self.moveX > self.limitMove:
                     self.rightMove = False
                     self.moveX = 0
@@ -175,24 +217,27 @@ class MidMonster:
                     self.rightMove = False
                     self.moveX = 0
             else:
-                self.x = self.x - 3
-                self.moveX = self.moveX + 3
+                self.x = self.x - distance
+                self.moveX = self.moveX + distance
                 if self.moveX > self.limitMove:
                     self.rightMove = True
                     self.moveX = 0
                 elif self.x < 0:
                     self.rightMove = True
                     self.moveX = 0
-            self.y = self.y - 3
+            self.y = self.y - distance
         else:
             self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), CANVAS_HEIGHT
 
         # 미사일
+        self.life_time += frame_time
+        distance = MidMonster.MISSILE_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
         i = 0
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
                 if self.missile_y[i] > 0:
-                    self.missile_y[i] -= 20
+                    self.missile_y[i] -= distance
                 else:
                     self.missile_show[i] = False
             i += 1
