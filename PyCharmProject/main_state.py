@@ -153,7 +153,59 @@ def handle_events(frame_time):
     pass
 
 
+def collide(a, front_index, b, back_index):
+    left_a, bottom_a, right_a, top_a = a.get_bb(front_index)
+    left_b, bottom_b, right_b, top_b = b.get_bb(back_index)
+
+    if left_a > right_b :
+        return False
+    if right_a < left_b :
+        return False
+    if top_a < bottom_b :
+        return False
+    if bottom_a > top_b :
+        return False
+
+    return True
+
+
 def update(frame_time):
+
+    # for i in range(0, player.collision_area_count):
+    #     player.set_collisionCheck(i, False, True)
+    # for i in range(0, player_missile.collision_area_count):
+    #     player_missile.set_collisionCheck(i, False, True)
+    #
+    # for i in range(0, player.collision_area_count):
+    #     for j in range(0, player_missile.collision_area_count):
+    #         result = collide(player, i, player_missile, j)
+    #         player.set_collisionCheck(i, result, False)
+    #         player_missile.set_collisionCheck(j, result, False)
+    #
+    # for i in range(0, player_special_missile.collision_area_count):
+    #     player_special_missile.set_collisionCheck(i, False, True)
+    #
+    # for i in range(0, player.collision_area_count):
+    #     for j in range(0, player_special_missile.collision_area_count):
+    #         result = collide(player, i, player_special_missile, j)
+    #         player.set_collisionCheck(i, result, False)
+    #         player_special_missile.set_collisionCheck(j, result, False)
+
+    for i in range(0, player.collision_area_count):
+        if player.collisionChecks[i] == True:
+            player.set_collisionCheck(i, False, True)
+    for monster in monsters:
+        for i in range(0, monster.collision_area_count):
+            if monster.collisionChecks[i] == True:
+                monster.set_collisionCheck(i, False, True)
+
+    for i in range(0, player.collision_area_count):
+        for monster in monsters:
+            for j in range(0, monster.collision_area_count):
+                result = collide(player, i, monster, j)
+                player.set_collisionCheck(i, result, False)
+                monster.set_collisionCheck(j, result, False)
+
     background.update(frame_time)
     for monster in monsters:
         monster.update(frame_time)
@@ -164,6 +216,8 @@ def update(frame_time):
     player_special_missile.update(frame_time)
     obstacle.update(frame_time)
     player.update(frame_time)
+
+
     delay(0.1)
     pass
 

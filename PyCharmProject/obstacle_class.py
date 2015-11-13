@@ -10,6 +10,8 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+COLLISION_AREA_1 = 1
+
 class Obstacle:
     FLY_SPEED_KMPH = 25.0                    # Km / Hour
     FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
@@ -17,6 +19,7 @@ class Obstacle:
     FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
 
     image = None
+    collision_area_count = COLLISION_AREA_1
 
     def __init__(self):
         self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT -30, CANVAS_HEIGHT)

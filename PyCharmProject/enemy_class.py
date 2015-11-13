@@ -32,6 +32,7 @@ class Monster:
     image_blue = None
     image_pink = None
     image_missile = None
+    collision_area_count = COLLISION_AREA_3
 
     def __init__(self):
         # 몬스터 관련 변수
@@ -47,6 +48,10 @@ class Monster:
         self.collisionY1= [0]*COLLISION_AREA_3
         self.collisionX2 = [0]*COLLISION_AREA_3
         self.collisionY2= [0]*COLLISION_AREA_3
+        self.collisionChecks= [0]*COLLISION_AREA_3
+
+        for self.collisionCheck in self.collisionChecks:
+            self.collisionCheck = False
 
         # 미사일 관련 변수
         self.missile_frame = MONSTER_MISSILE_POWER_1
@@ -109,21 +114,37 @@ class Monster:
     def showArea(self):
         # 몬스터
         self.collisionX1[0] = (self.x) - 10
-        self.collisionY1[0] = (self.y-4) + 22
+        self.collisionY1[0] = (self.y-4) - 22
         self.collisionX2[0] = (self.x) + 10
-        self.collisionY2[0] = (self.y-4) - 22
+        self.collisionY2[0] = (self.y-4) + 22
         self.collisionX1[1] = (self.x-18) - 7
-        self.collisionY1[1] = (self.y) + 7
+        self.collisionY1[1] = (self.y) - 7
         self.collisionX2[1] = (self.x-18) + 7
-        self.collisionY2[1] = (self.y) - 7
+        self.collisionY2[1] = (self.y) + 7
         self.collisionX1[2] = (self.x+18) - 7
-        self.collisionY1[2] = (self.y) + 7
+        self.collisionY1[2] = (self.y) - 7
         self.collisionX2[2] = (self.x+18) + 7
-        self.collisionY2[2] = (self.y) - 7
+        self.collisionY2[2] = (self.y) + 7
 
-        draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
-        draw_rectangle(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
-        draw_rectangle(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        # draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        # draw_rectangle(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+        # draw_rectangle(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+
+        if self.collisionChecks[0] == True:
+            draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        else :
+            draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+
+        if self.collisionChecks[1] == True:
+            draw_rectangle_green(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+        else:
+            draw_rectangle_red(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+
+        if self.collisionChecks[2] == True:
+            draw_rectangle_green(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        else:
+            draw_rectangle_red(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+
 
         # 미사일
         i = 0
@@ -149,6 +170,15 @@ class Monster:
                     break
             i += 1
 
+    def get_bb(self, index):
+        return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
+
+    def set_collisionCheck(self, index, value, change):
+        if change == True:
+            self.collisionChecks[index] = value
+        elif self.collisionChecks[index] == False:
+            self.collisionChecks[index] = value
+
 
 class MidMonster:
     FLY_SPEED_KMPH = 13.0                    # Km / Hour
@@ -163,6 +193,8 @@ class MidMonster:
 
     image_red = None
     image_missile = None
+
+    collision_area_count = COLLISION_AREA_3
 
     def __init__(self):
         # 몬스터 관련 변수
@@ -181,6 +213,10 @@ class MidMonster:
         self.collisionY1= [0]*COLLISION_AREA_3
         self.collisionX2 = [0]*COLLISION_AREA_3
         self.collisionY2= [0]*COLLISION_AREA_3
+        self.collisionChecks= [0]*COLLISION_AREA_3
+
+        for self.collisionCheck in self.collisionChecks:
+            self.collisionCheck = False
 
         # 미사일 관련 변수
         self.missile_frame = MONSTER_MISSILE_POWER_2
@@ -259,20 +295,35 @@ class MidMonster:
     def showArea(self):
         # 몬스터
         self.collisionX1[0] = (self.x) - 35
-        self.collisionY1[0] = (self.y) + 60
+        self.collisionY1[0] = (self.y) - 60
         self.collisionX2[0] = (self.x) + 35
-        self.collisionY2[0] = (self.y) - 60
+        self.collisionY2[0] = (self.y) + 60
         self.collisionX1[1] = (self.x-54) - 18
-        self.collisionY1[1] = (self.y) + 20
+        self.collisionY1[1] = (self.y) - 20
         self.collisionX2[1] = (self.x-54) + 18
-        self.collisionY2[1] = (self.y) - 20
+        self.collisionY2[1] = (self.y) + 20
         self.collisionX1[2] = (self.x+54) - 18
-        self.collisionY1[2] = (self.y) + 20
+        self.collisionY1[2] = (self.y) - 20
         self.collisionX2[2] = (self.x+54) + 18
-        self.collisionY2[2] = (self.y) - 20
-        draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
-        draw_rectangle(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
-        draw_rectangle(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        self.collisionY2[2] = (self.y) + 20
+        # draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        # draw_rectangle(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+        # draw_rectangle(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        if self.collisionChecks[0] == True:
+            draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        else :
+            draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+
+        if self.collisionChecks[1] == True:
+            draw_rectangle_green(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+        else:
+            draw_rectangle_red(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+
+        if self.collisionChecks[2] == True:
+            draw_rectangle_green(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        else:
+            draw_rectangle_red(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+
 
         # 미사일
         i = 0
