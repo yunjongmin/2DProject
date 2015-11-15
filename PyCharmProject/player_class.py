@@ -55,7 +55,7 @@ class Player:
         self.life_time += frame_time
         distance = Player.FLY_SPEED_PPS * frame_time
         self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 3
+        self.frame = int(self.total_frames/5) % 3
 
         if self.moveRight:
             if self.x < CANVAS_WIDTH - distance:
@@ -81,13 +81,13 @@ class Player:
         self.collisionY1[0] = (self.y+10) - 50
         self.collisionX2[0] = self.x + 20
         self.collisionY2[0] = (self.y+10) + 50
-        self.collisionX1[1] = (self.x-40) - 30
+        self.collisionX1[1] = (self.x-50) - 30
         self.collisionY1[1] = (self.y+8) - 20
-        self.collisionX2[1] = (self.x-40) + 30
+        self.collisionX2[1] = (self.x-50) + 30
         self.collisionY2[1] = (self.y+8) + 20
-        self.collisionX1[2] = (self.x+40) - 30
+        self.collisionX1[2] = (self.x+50) - 30
         self.collisionY1[2] = (self.y+8) - 20
-        self.collisionX2[2] = (self.x+40) + 30
+        self.collisionX2[2] = (self.x+50) + 30
         self.collisionY2[2] = (self.y+8) + 20
 
         if self.collisionChecks[0] == True:

@@ -33,6 +33,7 @@ class Monster:
     image_pink = None
     image_missile = None
     collision_area_count = COLLISION_AREA_3
+    missile_collision_area_count = MISSILE_MAX
 
     def __init__(self):
         # 몬스터 관련 변수
@@ -66,6 +67,11 @@ class Monster:
         self.missile_collisionY1= [0]*MISSILE_MAX
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
+        self.missile_collisionChecks= [0]*MISSILE_MAX
+
+        for self.missile_collisionCheck in self.missile_collisionChecks:
+            self.missile_collisionCheck = False
+
 
         self.life_time = 0.0
         self.total_frames = 0.0
@@ -75,7 +81,7 @@ class Monster:
         self.life_time += frame_time
         distance = Monster.FLY_SPEED_PPS * frame_time
         self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 3
+        self.frame = int(self.total_frames/5) % 3
         # self.frame = (self.frame + 1) % 3
         if self.y > 0 :
             self.y = self.y - distance
@@ -151,11 +157,16 @@ class Monster:
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
                 self.missile_collisionX1[i] = (self.missile_x[i]-3) - 2
-                self.missile_collisionY1[i] = (self.missile_y[i]-30) + 2
+                self.missile_collisionY1[i] = (self.missile_y[i]-30) - 2
                 self.missile_collisionX2[i] = (self.missile_x[i]-3) + 2
-                self.missile_collisionY2[i] = (self.missile_y[i]-30) - 2
+                self.missile_collisionY2[i] = (self.missile_y[i]-30) + 2
 
-                draw_rectangle(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                if self.missile_collisionChecks[i] == True:
+                    draw_rectangle_green(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                else :
+                    draw_rectangle_red(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+
+                # draw_rectangle(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
             i += 1
 
     def showMissile(self, showX, showY):
@@ -179,6 +190,15 @@ class Monster:
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
 
+    def get_missile_bb(self, index):
+        return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+
+    def set_missile_collisionCheck(self, index, value, change):
+        if change == True:
+            self.missile_collisionChecks[index] = value
+        elif self.missile_collisionChecks[index] == False:
+            self.missile_collisionChecks[index] = value
+
 
 class MidMonster:
     FLY_SPEED_KMPH = 13.0                    # Km / Hour
@@ -195,6 +215,7 @@ class MidMonster:
     image_missile = None
 
     collision_area_count = COLLISION_AREA_3
+    missile_collision_area_count = MISSILE_MAX
 
     def __init__(self):
         # 몬스터 관련 변수
@@ -231,6 +252,10 @@ class MidMonster:
         self.missile_collisionY1= [0]*MISSILE_MAX
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
+        self.missile_collisionChecks= [0]*MISSILE_MAX
+
+        for self.missile_collisionCheck in self.missile_collisionChecks:
+            self.missile_collisionCheck = False
 
         self.life_time = 0.0
         self.total_frames = 0.0
@@ -240,7 +265,7 @@ class MidMonster:
         self.life_time += frame_time
         distance = MidMonster.FLY_SPEED_PPS * frame_time
         self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 3
+        self.frame = int(self.total_frames/5) % 3
         # self.frame = (self.frame + 1) % 3
         if self.y > 0 :
             if self.rightMove == True:
@@ -334,7 +359,10 @@ class MidMonster:
                 self.missile_collisionX2[i] = (self.missile_x[i]-3) + 4
                 self.missile_collisionY2[i] = (self.missile_y[i]-30) - 4
 
-                draw_rectangle(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                if self.missile_collisionChecks[i] == True:
+                    draw_rectangle_green(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                else :
+                    draw_rectangle_red(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
             i += 1
 
     def showMissile(self, showX, showY):
@@ -348,3 +376,21 @@ class MidMonster:
                     self.missile_y[i] = showY
                     break
             i += 1
+
+    def get_bb(self, index):
+        return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
+
+    def set_collisionCheck(self, index, value, change):
+        if change == True:
+            self.collisionChecks[index] = value
+        elif self.collisionChecks[index] == False:
+            self.collisionChecks[index] = value
+
+    def get_missile_bb(self, index):
+        return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+
+    def set_missile_collisionCheck(self, index, value, change):
+        if change == True:
+            self.missile_collisionChecks[index] = value
+        elif self.missile_collisionChecks[index] == False:
+            self.missile_collisionChecks[index] = value

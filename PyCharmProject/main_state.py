@@ -169,6 +169,22 @@ def collide(a, front_index, b, back_index):
     return True
 
 
+def missile_collide(a, front_index, b, back_index):
+    left_a, bottom_a, right_a, top_a = a.get_bb(front_index)
+    left_b, bottom_b, right_b, top_b = b.get_missile_bb(back_index)
+
+    if left_a > right_b :
+        return False
+    if right_a < left_b :
+        return False
+    if top_a < bottom_b :
+        return False
+    if bottom_a > top_b :
+        return False
+
+    return True
+
+
 def update(frame_time):
 
     # for i in range(0, player.collision_area_count):
@@ -191,20 +207,123 @@ def update(frame_time):
     #         player.set_collisionCheck(i, result, False)
     #         player_special_missile.set_collisionCheck(j, result, False)
 
+    # 캐릭터 영역 초기화
     for i in range(0, player.collision_area_count):
         if player.collisionChecks[i] == True:
             player.set_collisionCheck(i, False, True)
+
+    # 캐릭터 미사일 영역 초기화
+    for i in range(0, player_missile.collision_area_count):
+        if player_missile.collisionChecks[i] == True:
+            player_missile.set_collisionCheck(i, False, True)
+
+    # 캐릭터 특수 미사일 영역 초기화
+    for i in range(0, player_special_missile.collision_area_count):
+        if player_special_missile.collisionChecks[i] == True:
+            player_special_missile.set_collisionCheck(i, False, True)
+
+    # 몬스터 영역 초기화
     for monster in monsters:
         for i in range(0, monster.collision_area_count):
             if monster.collisionChecks[i] == True:
                 monster.set_collisionCheck(i, False, True)
 
+    # 몬스터 미사일 영역 초기화
+    for monster in monsters:
+        for i in range(0, monster.missile_collision_area_count):
+            if monster.missile_collisionChecks[i] == True:
+                monster.set_missile_collisionCheck(i, False, True)
+
+    # 중간 몬스터 영역 초기화
+    for mid_monster in mid_monsters:
+        for i in range(0, mid_monster.collision_area_count):
+            if mid_monster.collisionChecks[i] == True:
+                mid_monster.set_collisionCheck(i, False, True)
+
+    # 중간 몬스터 미사일 영역 초기화
+    for mid_monster in mid_monsters:
+        for i in range(0, mid_monster.missile_collision_area_count):
+            if mid_monster.missile_collisionChecks[i] == True:
+                mid_monster.set_missile_collisionCheck(i, False, True)
+
+    # 특수 장애물 영역 초기화
+    for i in range(0, obstacle.collision_area_count):
+        if obstacle.collisionChecks[i] == True:
+            obstacle.set_collisionCheck(i, False, True)
+
+    # 캐릭터와 몬스터 충돌 체크
     for i in range(0, player.collision_area_count):
         for monster in monsters:
             for j in range(0, monster.collision_area_count):
                 result = collide(player, i, monster, j)
                 player.set_collisionCheck(i, result, False)
                 monster.set_collisionCheck(j, result, False)
+
+    # 캐릭터 미사일과 몬스터 충돌 체크
+    for i in range(0, player_missile.collision_area_count):
+        for monster in monsters:
+            for j in range(0, monster.collision_area_count):
+                result = collide(player_missile, i, monster, j)
+                player_missile.set_collisionCheck(i, result, False)
+                monster.set_collisionCheck(j, result, False)
+
+    # 캐릭터 특수 미사일과 몬스터 충돌 체크
+    for i in range(0, player_special_missile.collision_area_count):
+        for monster in monsters:
+            for j in range(0, monster.collision_area_count):
+                result = collide(player_special_missile, i, monster, j)
+                player_special_missile.set_collisionCheck(i, result, False)
+                monster.set_collisionCheck(j, result, False)
+
+    # 캐릭터와 몬스터 미사일과 충돌 체크
+    for i in range(0, player.collision_area_count):
+        for monster in monsters:
+            for j in range(0, monster.missile_collision_area_count):
+                result = missile_collide(player, i, monster, j)
+                player.set_collisionCheck(i, result, False)
+                monster.set_missile_collisionCheck(j, result, False)
+
+    # 캐릭터와 중간 몬스터 충돌 체크
+    for i in range(0, player.collision_area_count):
+        for mid_monster in mid_monsters:
+            for j in range(0, mid_monster.collision_area_count):
+                result = collide(player, i, mid_monster, j)
+                player.set_collisionCheck(i, result, False)
+                mid_monster.set_collisionCheck(j, result, False)
+
+    # 캐릭터 미사일과 중간 몬스터 충돌 체크
+    for i in range(0, player_missile.collision_area_count):
+        for mid_monster in mid_monsters:
+            for j in range(0, mid_monster.collision_area_count):
+                result = collide(player_missile, i, mid_monster, j)
+                player_missile.set_collisionCheck(i, result, False)
+                mid_monster.set_collisionCheck(j, result, False)
+
+    # 캐릭터 특수 미사일과 중간 몬스터 충돌 체크
+    for i in range(0, player_special_missile.collision_area_count):
+        for mid_monster in mid_monsters:
+            for j in range(0, mid_monster.collision_area_count):
+                result = collide(player_special_missile, i, mid_monster, j)
+                player_special_missile.set_collisionCheck(i, result, False)
+                mid_monster.set_collisionCheck(j, result, False)
+
+    # 캐릭터와 중간 몬스터 미사일과 충돌 체크
+    for i in range(0, player.collision_area_count):
+        for mid_monster in mid_monsters:
+            for j in range(0, mid_monster.missile_collision_area_count):
+                result = missile_collide(player, i, mid_monster, j)
+                player.set_collisionCheck(i, result, False)
+                mid_monster.set_missile_collisionCheck(j, result, False)
+
+     # 캐릭터와 특수 장애물 충돌 체크
+    for i in range(0, player.collision_area_count):
+        for j in range(0, obstacle.collision_area_count):
+            result = collide(player, i, obstacle, j)
+            player.set_collisionCheck(i, result, False)
+            obstacle.set_collisionCheck(j, result, False)
+
+
+
 
     background.update(frame_time)
     for monster in monsters:
@@ -218,7 +337,7 @@ def update(frame_time):
     player.update(frame_time)
 
 
-    delay(0.1)
+    delay(0.03)
     pass
 
 

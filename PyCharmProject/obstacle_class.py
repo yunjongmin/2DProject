@@ -30,6 +30,9 @@ class Obstacle:
         self.collisionY1= [0]
         self.collisionX2 = [0]
         self.collisionY2= [0]
+        self.collisionChecks= [0]
+
+        self.collisionCheck = False
 
         self.life_time = 0.0
         self.total_frames = 0.0
@@ -50,8 +53,20 @@ class Obstacle:
 
     def showArea(self):
         self.collisionX1[0] = (self.x) - 40
-        self.collisionY1[0] = (self.y-25) + 40
+        self.collisionY1[0] = (self.y-25) - 40
         self.collisionX2[0] = (self.x) + 40
-        self.collisionY2[0] = (self.y-25) - 40
+        self.collisionY2[0] = (self.y-25) + 40
 
-        draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        if self.collisionChecks[0] == True:
+            draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        else :
+            draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+
+    def get_bb(self, index):
+        return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
+
+    def set_collisionCheck(self, index, value, change):
+        if change == True:
+            self.collisionChecks[index] = value
+        elif self.collisionChecks[index] == False:
+            self.collisionChecks[index] = value
