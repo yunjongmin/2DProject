@@ -11,6 +11,7 @@ MISSILE_POWER_1 = 1
 MISSILE_POWER_2 = 2
 SPECIAL_MAX = 3
 SPECIAL_MISSILE_A = 1
+PLAYER_HP_MAX = 100
 
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
@@ -25,6 +26,7 @@ class Player:
 
     collision_area_count = COLLISION_AREA_3
 
+    hp = PLAYER_HP_MAX
     image = None
     moveRight = None
     moveLeft = None
@@ -228,6 +230,15 @@ class PlayerMissile:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+
+    def delete_missile(self, index):
+        self.show[index] = False
+        self.x[index] = -1
+        self.y[index] = -1
+        self.collisionX1[index] = -1
+        self.collisionY1[index] = -1
+        self.collisionX2[index] = -1
+        self.collisionY2[index] = -1
 
 
 class SpecialMissile:

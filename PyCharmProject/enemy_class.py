@@ -12,6 +12,12 @@ MONSTER_MISSILE_POWER_1 = 0
 MONSTER_MISSILE_POWER_2 = 1
 MID_MONSTER_LIMIT_MOVE = 100
 
+MONSTER_HP_MAX = 100
+MONSTER_MISSILE_POWER = 5
+
+MID_MONSTER_HP_MAX = 300
+MID_MONSTER_MISSILE_POWER = 10
+
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -37,13 +43,18 @@ class Monster:
 
     def __init__(self):
         # 몬스터 관련 변수
-        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT -30, CANVAS_HEIGHT)
+        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
         self.frame = random.randint(0, 3)
         self.flag = random.randint(MONSTER_BLUE, MONSTER_PINK)
+        self.hp = MONSTER_HP_MAX
+        self.missile_power = MONSTER_MISSILE_POWER
+
         if Monster.image_blue == None:
             Monster.image_blue = load_image('Resource/Monster/monster_blue.png')
         if Monster.image_pink == None:
             Monster.image_pink = load_image('Resource/Monster/monster_pink.png')
+
+
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
@@ -76,6 +87,12 @@ class Monster:
         self.life_time = 0.0
         self.total_frames = 0.0
 
+    def newCreateMonster(self):
+        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
+        self.frame = random.randint(0, 3)
+        self.flag = random.randint(MONSTER_BLUE, MONSTER_PINK)
+        self.hp = MONSTER_HP_MAX
+
     def update(self, frame_time):
         # 몬스터
         self.life_time += frame_time
@@ -86,7 +103,7 @@ class Monster:
         if self.y > 0 :
             self.y = self.y - distance
         else:
-            self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), CANVAS_HEIGHT
+            self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
 
         self.showMissile(self.x, self.y)
 
@@ -171,15 +188,16 @@ class Monster:
 
     def showMissile(self, showX, showY):
         i = 0
-        while(i < MISSILE_MAX):
-            self.checkInt = random.randint(0, 10000)
-            if self.checkInt > 9995:
-                if self.missile_show[i] == False:
-                    self.missile_show[i] = True
-                    self.missile_x[i] = showX
-                    self.missile_y[i] = showY
-                    break
-            i += 1
+        if showY < CANVAS_HEIGHT:
+            while(i < MISSILE_MAX):
+                self.checkInt = random.randint(0, 10000)
+                if self.checkInt > 9995:
+                    if self.missile_show[i] == False:
+                        self.missile_show[i] = True
+                        self.missile_x[i] = showX
+                        self.missile_y[i] = showY
+                        break
+                i += 1
 
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
@@ -219,7 +237,7 @@ class MidMonster:
 
     def __init__(self):
         # 몬스터 관련 변수
-        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT - 30, CANVAS_HEIGHT)
+        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
         self.frame = random.randint(0, 3)
         if random.randint(0, 1) == 0 :
             self.rightMove = True
@@ -227,6 +245,9 @@ class MidMonster:
             self.rightMove = False
         self.limitMove = MID_MONSTER_LIMIT_MOVE
         self.moveX = random.randint(0, 50)
+        self.hp = MID_MONSTER_HP_MAX
+        self.missile_power = MID_MONSTER_MISSILE_POWER
+
         if MidMonster.image_red == None:
             MidMonster.image_red = load_image('Resource/Monster/mid_boss_red.png')
 
@@ -260,6 +281,17 @@ class MidMonster:
         self.life_time = 0.0
         self.total_frames = 0.0
 
+    def newCreateMidMonster(self):
+        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
+        self.frame = random.randint(0, 3)
+        if random.randint(0, 1) == 0 :
+            self.rightMove = True
+        else:
+            self.rightMove = False
+        self.limitMove = MID_MONSTER_LIMIT_MOVE
+        self.moveX = random.randint(0, 50)
+        self.hp = MID_MONSTER_HP_MAX
+
     def update(self, frame_time):
         # 몬스터
         self.life_time += frame_time
@@ -288,7 +320,7 @@ class MidMonster:
                     self.moveX = 0
             self.y = self.y - distance
         else:
-            self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), CANVAS_HEIGHT
+            self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
 
         # 미사일
         self.life_time += frame_time
@@ -367,15 +399,16 @@ class MidMonster:
 
     def showMissile(self, showX, showY):
         i = 0
-        while(i < MISSILE_MAX):
-            self.checkInt = random.randint(0, 10000)
-            if self.checkInt > 9995:
-                if self.missile_show[i] == False:
-                    self.missile_show[i] = True
-                    self.missile_x[i] = showX
-                    self.missile_y[i] = showY
-                    break
-            i += 1
+        if showY < CANVAS_HEIGHT:
+            while(i < MISSILE_MAX):
+                self.checkInt = random.randint(0, 10000)
+                if self.checkInt > 9995:
+                    if self.missile_show[i] == False:
+                        self.missile_show[i] = True
+                        self.missile_x[i] = showX
+                        self.missile_y[i] = showY
+                        break
+                i += 1
 
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]

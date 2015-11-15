@@ -22,7 +22,7 @@ class Obstacle:
     collision_area_count = COLLISION_AREA_1
 
     def __init__(self):
-        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT -30, CANVAS_HEIGHT)
+        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
         if Obstacle.image == None:
             Obstacle.image = load_image('Resource/Etc/obstacle1.png')
 
@@ -46,7 +46,7 @@ class Obstacle:
         if self.y > 0 :
             self.y = self.y - distance
         else:
-            self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT -30, CANVAS_HEIGHT)
+            self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
 
     def draw(self):
          self.image.clip_draw(0, 0, 86, 135, self.x, self.y)
