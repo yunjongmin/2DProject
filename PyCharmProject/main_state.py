@@ -30,24 +30,24 @@ player_special_missile = None
 
 
 class Background:
-    image1 = None
-    image2 = None
+    # image1 = None
+    # image2 = None
 
     def __init__(self):
-        self.x, self.y = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
         self.image = load_image('Resource/Background/back_02.bmp')
-        self.image1 = self.image
-        self.image2 = self.image
+        self.speed_down = 100
+        self.down = 0
+        self.screen_width = CANVAS_WIDTH
+        self.screen_height = CANVAS_HEIGHT
 
     def update(self, frame_time):
-        if self.y > -CANVAS_HEIGHT/2 + 10:
-            self.y -= 5
-        else:
-            self.y = CANVAS_HEIGHT/2
+        self.down = (self.down + frame_time * self.speed_down) % self.image.h
 
     def draw(self):
-        self.image1.draw(self.x, self.y)
-        self.image2.draw(self.x, self.y + CANVAS_HEIGHT)
+        y = int(self.down)
+        h = min(self.image.h - y, self.screen_height)
+        self.image.clip_draw_to_origin(0, y, self.screen_width, h, 0, 0)
+        self.image.clip_draw_to_origin(0, 0, self.screen_width, self.screen_height - h, 0, h)
 
 
 #
