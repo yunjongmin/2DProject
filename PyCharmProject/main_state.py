@@ -258,6 +258,9 @@ def update(frame_time):
                 result = collide(player, i, monster, j)
                 player.set_collisionCheck(i, result, False)
                 monster.set_collisionCheck(j, result, False)
+                if result == True:
+                    player_missile.delete_missile(i)
+                    monster.newCreateMonster()
 
     # 캐릭터 미사일과 몬스터 충돌 체크
     for i in range(0, player_missile.collision_area_count):
@@ -287,6 +290,8 @@ def update(frame_time):
                 result = missile_collide(player, i, monster, j)
                 player.set_collisionCheck(i, result, False)
                 monster.set_missile_collisionCheck(j, result, False)
+                if result == True:
+                    monster.newCreateMonsterMissile(j)
 
     # 캐릭터와 중간 몬스터 충돌 체크
     for i in range(0, player.collision_area_count):
@@ -332,9 +337,6 @@ def update(frame_time):
             player.set_collisionCheck(i, result, False)
             obstacle.set_collisionCheck(j, result, False)
 
-
-
-
     background.update(frame_time)
     for monster in monsters:
         monster.update(frame_time)
@@ -345,7 +347,6 @@ def update(frame_time):
     player_special_missile.update(frame_time)
     obstacle.update(frame_time)
     player.update(frame_time)
-
 
     delay(0.03)
     pass

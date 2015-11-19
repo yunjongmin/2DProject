@@ -93,6 +93,15 @@ class Monster:
         self.flag = random.randint(MONSTER_BLUE, MONSTER_PINK)
         self.hp = MONSTER_HP_MAX
 
+    def newCreateMonsterMissile(self, index):
+        self.missile_show[index] = False
+        self.missile_collisionChecks[index] = False
+        self.missile_collisionX1[index] = False
+        self.missile_collisionY1[index] = False
+        self.missile_collisionX2[index] = False
+        self.missile_collisionY2[index] = False
+
+
     def update(self, frame_time):
         # 몬스터
         self.life_time += frame_time
@@ -209,7 +218,10 @@ class Monster:
             self.collisionChecks[index] = value
 
     def get_missile_bb(self, index):
-        return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        if self.missile_show[index]:
+            return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        else:
+            return -100, -100, -100, -100
 
     def set_missile_collisionCheck(self, index, value, change):
         if change == True:
@@ -420,7 +432,11 @@ class MidMonster:
             self.collisionChecks[index] = value
 
     def get_missile_bb(self, index):
-        return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        # return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        if self.missile_show[index]:
+            return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        else:
+            return -100, -100, -100, -100
 
     def set_missile_collisionCheck(self, index, value, change):
         if change == True:
