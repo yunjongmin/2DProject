@@ -23,6 +23,8 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+EXPLOSION_FRAMES_PER_ACTION = 8
+
 
 class Monster:
     FLY_SPEED_KMPH = 10.0                    # Km / Hour
@@ -38,6 +40,7 @@ class Monster:
     image_blue = None
     image_pink = None
     image_missile = None
+    image_explosion = None
     collision_area_count = COLLISION_AREA_3
     missile_collision_area_count = MISSILE_MAX
 
@@ -53,8 +56,6 @@ class Monster:
             Monster.image_blue = load_image('Resource/Monster/monster_blue.png')
         if Monster.image_pink == None:
             Monster.image_pink = load_image('Resource/Monster/monster_pink.png')
-
-
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
@@ -82,6 +83,15 @@ class Monster:
 
         for self.missile_collisionCheck in self.missile_collisionChecks:
             self.missile_collisionCheck = False
+
+        # 폭발 관련 변수
+        # self.explosion_x = [0]
+        # self.explosion_y= [0]
+        self.explosion_show = False
+        self.explosion_frame = 0
+
+        if Monster.image_explosion == None:
+            self.image_explosion = load_image('Resource/Explosion/monster_explosion.png')
 
 
         self.life_time = 0.0
@@ -117,9 +127,9 @@ class Monster:
         self.showMissile(self.x, self.y)
 
         # 미사일
-        self.life_time += frame_time
+        # self.life_time += frame_time
         distance = Monster.MISSILE_SPEED_PPS * frame_time
-        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+        # self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
         i = 0
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
@@ -128,6 +138,21 @@ class Monster:
                 else:
                     self.missile_show[i] = False
             i += 1
+
+        #
+        # self.life_time += frame_time
+        # distance = MidMonster.FLY_SPEED_PPS * frame_time
+        # self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+        # self.frame = int(self.total_frames/5) % 3
+
+        # 폭발
+        if self.explosion_show == True:
+            if self.explosion_frame < 5 :
+                self.explosion_frame = int(self.total_frames/5) % 6
+            else :
+                self.explosion_show = False
+                self.explosion_frame = 0
+
 
     def draw(self):
         # 몬스터
@@ -142,6 +167,11 @@ class Monster:
             if self.missile_show[i] == True:
                 self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.missile_x[i] - 2, self.missile_y[i] - 30)
             i += 1
+
+        # 폭발관련
+        if self.explosion_show == True:
+            self.image_explosion.clip_draw(self.explosion_frame * 38, 0, 38, 46, self.explosion_x, self.explosion_y)
+
 
     def showArea(self):
         # 몬스터
@@ -208,6 +238,13 @@ class Monster:
                         break
                 i += 1
 
+    def showExplosion(self, showX, showY):
+        if self.explosion_show == False:
+            self.explosion_show = True
+            self.explosion_x = showX
+            self.explosion_y = showY
+            self.explosion_frame = 0
+
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
 
@@ -216,6 +253,8 @@ class Monster:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+            if value == True:
+                self.showExplosion(self.x, self.y)
 
     def get_missile_bb(self, index):
         if self.missile_show[index]:
@@ -303,6 +342,16 @@ class MidMonster:
         self.limitMove = MID_MONSTER_LIMIT_MOVE
         self.moveX = random.randint(0, 50)
         self.hp = MID_MONSTER_HP_MAX
+
+    def newCreateMidMonsterMissile(self, index):
+        self.missile_show[index] = False
+        self.missile_collisionChecks[index] = False
+        self.missile_collisionX1[index] = False
+        self.missile_collisionY1[index] = False
+        self.missile_collisionX2[index] = False
+        self.missile_collisionY2[index] = False
+
+
 
     def update(self, frame_time):
         # 몬스터
@@ -443,3 +492,22 @@ class MidMonster:
             self.missile_collisionChecks[index] = value
         elif self.missile_collisionChecks[index] == False:
             self.missile_collisionChecks[index] = value
+
+
+# class Explosion:
+#     image = None
+#
+#     def __init__(self):
+#         self.image = load_image('Resource/Explosion/mid_monster_explosion.png')
+#         self.x, self.y = 50, 50
+#         self.life_time = 0.0
+#         self.frame = 0
+#         self.total_frames = 0.0
+#
+#     def update(self, frame_time):
+#         self.life_time += frame_time
+#         self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+#         self.frame = int(self.total_frames/5) % 5
+#     def draw(self):
+#         # 몬스터
+#         self.image.clip_draw(self.frame * 55, 0, 55, 81, self.x, self.y)

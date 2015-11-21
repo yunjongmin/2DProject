@@ -99,6 +99,9 @@ def create_world():
     obstacle = obstacle_class.Obstacle()
     player_special_missile = player_class.SpecialMissile()
 
+    # global explosion
+    # explosion = enemy_class.Explosion()
+
 
 def destroy_world():
     global background
@@ -119,6 +122,8 @@ def destroy_world():
     del(obstacle)
     del(player_special_missile)
 
+    # global explosion
+    # del(explosion)
 
 def enter():
     game_framework.reset_time()
@@ -259,7 +264,6 @@ def update(frame_time):
                 player.set_collisionCheck(i, result, False)
                 monster.set_collisionCheck(j, result, False)
                 if result == True:
-                    player_missile.delete_missile(i)
                     monster.newCreateMonster()
 
     # 캐릭터 미사일과 몬스터 충돌 체크
@@ -300,6 +304,8 @@ def update(frame_time):
                 result = collide(player, i, mid_monster, j)
                 player.set_collisionCheck(i, result, False)
                 mid_monster.set_collisionCheck(j, result, False)
+                if result == True:
+                    mid_monster.newCreateMidMonster()
 
     # 캐릭터 미사일과 중간 몬스터 충돌 체크
     for i in range(0, player_missile.collision_area_count):
@@ -329,6 +335,8 @@ def update(frame_time):
                 result = missile_collide(player, i, mid_monster, j)
                 player.set_collisionCheck(i, result, False)
                 mid_monster.set_missile_collisionCheck(j, result, False)
+                if result == True:
+                    mid_monster.newCreateMidMonsterMissile(j)
 
      # 캐릭터와 특수 장애물 충돌 체크
     for i in range(0, player.collision_area_count):
@@ -347,6 +355,8 @@ def update(frame_time):
     player_special_missile.update(frame_time)
     obstacle.update(frame_time)
     player.update(frame_time)
+
+    # explosion.update(frame_time)
 
     delay(0.03)
     pass
@@ -375,6 +385,7 @@ def draw(frame_time):
         mid_monster.showArea()
     obstacle.showArea()
 
+    # explosion.draw()
 
     update_canvas()
     pass
