@@ -85,8 +85,6 @@ class Monster:
             self.missile_collisionCheck = False
 
         # 폭발 관련 변수
-        # self.explosion_x = [0]
-        # self.explosion_y= [0]
         self.explosion_show = False
         self.explosion_frame = 0
 
@@ -139,16 +137,12 @@ class Monster:
                     self.missile_show[i] = False
             i += 1
 
-        #
-        # self.life_time += frame_time
-        # distance = MidMonster.FLY_SPEED_PPS * frame_time
-        # self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
-        # self.frame = int(self.total_frames/5) % 3
 
         # 폭발
         if self.explosion_show == True:
+            self.explosion_time += frame_time
             if self.explosion_frame < 5 :
-                self.explosion_frame = int(self.total_frames/5) % 6
+                self.explosion_frame =int(self.explosion_time*5)
             else :
                 self.explosion_show = False
                 self.explosion_frame = 0
@@ -244,6 +238,7 @@ class Monster:
             self.explosion_x = showX
             self.explosion_y = showY
             self.explosion_frame = 0
+            self.explosion_time = 0
 
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
@@ -282,6 +277,7 @@ class MidMonster:
 
     image_red = None
     image_missile = None
+    image_explosion = None
 
     collision_area_count = COLLISION_AREA_3
     missile_collision_area_count = MISSILE_MAX
@@ -328,6 +324,13 @@ class MidMonster:
 
         for self.missile_collisionCheck in self.missile_collisionChecks:
             self.missile_collisionCheck = False
+
+        # 폭발 관련 변수
+        self.explosion_show = False
+        self.explosion_frame = 0
+
+        if MidMonster.image_explosion == None:
+            self.image_explosion = load_image('Resource/Explosion/mid_monster_explosion.png')
 
         self.life_time = 0.0
         self.total_frames = 0.0
@@ -395,9 +398,16 @@ class MidMonster:
                 else:
                     self.missile_show[i] = False
             i += 1
-
-
         self.showMissile(self.x, self.y)
+
+        # 폭발
+        if self.explosion_show == True:
+            self.explosion_time += frame_time
+            if self.explosion_frame < 5 :
+                self.explosion_frame =int(self.explosion_time*5)
+            else :
+                self.explosion_show = False
+                self.explosion_frame = 0
 
     def draw(self):
         # 몬스터
@@ -409,6 +419,10 @@ class MidMonster:
             if self.missile_show[i] == True:
                 self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.missile_x[i] - 2, self.missile_y[i] - 30)
             i += 1
+
+        # 폭발관련
+        if self.explosion_show == True:
+            self.image_explosion.clip_draw(self.explosion_frame * 55, 0, 55, 81, self.explosion_x, self.explosion_y)
 
     def showArea(self):
         # 몬스터
@@ -471,6 +485,14 @@ class MidMonster:
                         break
                 i += 1
 
+    def showExplosion(self, showX, showY):
+        if self.explosion_show == False:
+            self.explosion_show = True
+            self.explosion_x = showX
+            self.explosion_y = showY
+            self.explosion_frame = 0
+            self.explosion_time = 0
+
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
 
@@ -479,6 +501,8 @@ class MidMonster:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+            if value == True:
+                self.showExplosion(self.x, self.y)
 
     def get_missile_bb(self, index):
         # return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
