@@ -44,6 +44,8 @@ class Monster:
     collision_area_count = COLLISION_AREA_3
     missile_collision_area_count = MISSILE_MAX
 
+    dieSound = None
+
     def __init__(self):
         # 몬스터 관련 변수
         self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
@@ -56,6 +58,9 @@ class Monster:
             Monster.image_blue = load_image('Resource/Monster/monster_blue.png')
         if Monster.image_pink == None:
             Monster.image_pink = load_image('Resource/Monster/monster_pink.png')
+        if Monster.dieSound == None:
+            Monster.dieSound = load_wav('Resource/Sound/mon_die.wav')
+            Monster.dieSound.set_volume(32)
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
@@ -250,6 +255,7 @@ class Monster:
             self.collisionChecks[index] = value
             if value == True:
                 self.showExplosion(self.x, self.y)
+                Monster.dieSound.play()
 
     def get_missile_bb(self, index):
         if self.missile_show[index]:
@@ -278,6 +284,7 @@ class MidMonster:
     image_red = None
     image_missile = None
     image_explosion = None
+    dieSound = None
 
     collision_area_count = COLLISION_AREA_3
     missile_collision_area_count = MISSILE_MAX
@@ -297,6 +304,9 @@ class MidMonster:
 
         if MidMonster.image_red == None:
             MidMonster.image_red = load_image('Resource/Monster/mid_boss_red.png')
+        if MidMonster.dieSound == None:
+            MidMonster.dieSound = load_wav('Resource/Sound/mon_die.wav')
+            MidMonster.dieSound.set_volume(32)
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
@@ -503,6 +513,7 @@ class MidMonster:
             self.collisionChecks[index] = value
             if value == True:
                 self.showExplosion(self.x, self.y)
+                MidMonster.dieSound.play()
 
     def get_missile_bb(self, index):
         # return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]

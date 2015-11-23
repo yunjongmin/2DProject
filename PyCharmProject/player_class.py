@@ -33,11 +33,13 @@ class Player:
     moveUp = None
     moveDown = None
 
+
     def __init__(self):
         self.x, self.y = 270, 200
         self.frame = 0
         if Player.image == None :
             Player.image = load_image('Resource/Character/character1.png')
+
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
         self.collisionX2 = [0]*COLLISION_AREA_3
@@ -150,6 +152,7 @@ class PlayerMissile:
 
     image = None
     power = MISSILE_POWER_1
+    missileSound = None
 
     collision_area_count = MISSILE_MAX
 
@@ -160,6 +163,9 @@ class PlayerMissile:
         self.show= [0]*MISSILE_MAX
         if PlayerMissile.image == None:
             PlayerMissile.image = load_image('Resource/Missile/missile1.png')
+        if PlayerMissile.missileSound == None:
+            PlayerMissile.missileSound = load_wav('Resource/Sound/missile_show.wav')
+            PlayerMissile.missileSound.set_volume(32)
 
         self.collisionX1 = [0]*MISSILE_MAX
         self.collisionY1= [0]*MISSILE_MAX
@@ -180,6 +186,7 @@ class PlayerMissile:
                 self.show[i] = True
                 self.x[i] = showX
                 self.y[i] = showY
+                self.missileSound.play()
                 break
             i += 1
 

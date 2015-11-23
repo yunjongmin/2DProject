@@ -40,6 +40,10 @@ class Background:
         self.screen_width = CANVAS_WIDTH
         self.screen_height = CANVAS_HEIGHT
 
+        self.bgm = load_music('Resource/Sound/background.mp3')
+        self.bgm.set_volume(64)
+        self.bgm.repeat_play()
+
     def update(self, frame_time):
         self.down = (self.down + frame_time * self.speed_down) % self.image.h
 
