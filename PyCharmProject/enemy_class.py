@@ -60,7 +60,7 @@ class Monster:
             Monster.image_pink = load_image('Resource/Monster/monster_pink.png')
         if Monster.dieSound == None:
             Monster.dieSound = load_wav('Resource/Sound/mon_die.wav')
-            Monster.dieSound.set_volume(32)
+            Monster.dieSound.set_volume(5)
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
@@ -306,7 +306,7 @@ class MidMonster:
             MidMonster.image_red = load_image('Resource/Monster/mid_boss_red.png')
         if MidMonster.dieSound == None:
             MidMonster.dieSound = load_wav('Resource/Sound/mon_die.wav')
-            MidMonster.dieSound.set_volume(32)
+            MidMonster.dieSound.set_volume(5)
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3

@@ -165,7 +165,7 @@ class PlayerMissile:
             PlayerMissile.image = load_image('Resource/Missile/missile1.png')
         if PlayerMissile.missileSound == None:
             PlayerMissile.missileSound = load_wav('Resource/Sound/missile_show.wav')
-            PlayerMissile.missileSound.set_volume(32)
+            PlayerMissile.missileSound.set_volume(5)
 
         self.collisionX1 = [0]*MISSILE_MAX
         self.collisionY1= [0]*MISSILE_MAX

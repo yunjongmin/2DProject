@@ -1,0 +1,19 @@
+Mon Nov 23 16:50:21 2015 +0900 player missile sound, monster die sound add
+Sun Nov 22 14:16:12 2015 +0900 mid_monster explosion image insert, monster explosion image modify
+Sun Nov 22 04:10:39 2015 +0900 monster explosion image insert
+Fri Nov 20 04:56:43 2015 +0900 background scrolling modify
+Thu Nov 19 15:21:09 2015 +0900 collision bug modify
+Mon Nov 16 00:29:35 2015 +0900 collision 90%
+Sun Nov 15 21:37:31 2015 +0900 collision 80%
+Sat Nov 14 15:37:31 2015 +0900 collision 40%
+Sat Nov 14 03:44:53 2015 +0900 collision 40%
+Fri Nov 13 21:15:07 2015 +0900 now code frame_time apply modify 100%
+Thu Nov 12 02:34:58 2015 +0900 code frame_time apply modify 40%
+Thu Nov 12 01:36:08 2015 +0900 code arrangement 90%
+Mon Nov 9 21:57:18 2015 +0900 Resource Modify
+Mon Nov 9 21:55:27 2015 +0900 code arrangement 70%
+Mon Nov 9 18:36:31 2015 +0900 code arrangement previous
+Mon Nov 9 18:32:46 2015 +0900 code arrangement previous
+Tue Nov 3 04:14:47 2015 +0900 collision 70%
+Fri Oct 30 12:56:17 2015 +0900 monster missile add
+Wed Oct 28 02:34:57 2015 +0900 first commit
