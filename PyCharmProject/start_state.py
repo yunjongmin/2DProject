@@ -1,5 +1,7 @@
 import game_framework
 import main_state
+import title_state
+
 from pico2d import *
 
 CANVAS_WIDTH = 800
@@ -13,7 +15,7 @@ logo_time = 0.0
 def enter():
     global image
     open_canvas(CANVAS_WIDTH,CANVAS_HEIGHT)
-    image = load_image('Resource/Etc/start_logo.png')
+    image = load_image('Resource/Etc/kpu_credit.png')
     pass
 
 
@@ -30,7 +32,7 @@ def update(frame_time):
     if(logo_time > 1.0):
         logo_time = 0
         #game_framework.quit()
-        game_framework.push_state(main_state)
+        game_framework.push_state(title_state)
     delay(0.01)
     logo_time += 0.01
     pass
