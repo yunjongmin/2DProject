@@ -28,17 +28,21 @@ class Player:
 
     hp = PLAYER_HP_MAX
     image = None
+    hpImage = None
     moveRight = None
     moveLeft = None
     moveUp = None
     moveDown = None
 
-
     def __init__(self):
         self.x, self.y = 270, 200
+        self.hpX, self.hpY = 50, 50
         self.frame = 0
+        self.hpFrame = 0
         if Player.image == None :
             Player.image = load_image('Resource/Character/character1.png')
+        if Player.hpImage == None :
+            Player.hpImage = load_image('Resource/Etc/hp.png')
 
         self.collisionX1 = [0]*COLLISION_AREA_3
         self.collisionY1= [0]*COLLISION_AREA_3
@@ -60,6 +64,7 @@ class Player:
         distance = Player.FLY_SPEED_PPS * frame_time
         self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
         self.frame = int(self.total_frames/5) % 3
+        self.hpFrame = int(self.total_frames/5) % 3
 
         if self.moveRight:
             if self.x < CANVAS_WIDTH - distance:
@@ -79,6 +84,8 @@ class Player:
 
     def draw(self):
         self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
+        self.hpImage.clip_draw(self.hpFrame * 57, 0, 57, 59, self.hpX, self.hpY)
+
 
     def showArea(self):
         self.collisionX1[0] = self.x - 20
