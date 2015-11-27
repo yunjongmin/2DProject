@@ -11,7 +11,7 @@ MISSILE_POWER_1 = 1
 MISSILE_POWER_2 = 2
 SPECIAL_MAX = 3
 SPECIAL_MISSILE_A = 1
-PLAYER_HP_MAX = 100
+PLAYER_HP_MAX = 5
 
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
@@ -84,7 +84,8 @@ class Player:
 
     def draw(self):
         self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
-        self.hpImage.clip_draw(self.hpFrame * 57, 0, 57, 59, self.hpX, self.hpY)
+        for i in range(0, self.hp) :
+            self.hpImage.clip_draw(self.hpFrame * 57, 0, 57, 59, self.hpX + (57*i), self.hpY)
 
 
     def showArea(self):
@@ -150,6 +151,10 @@ class Player:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+
+    def set_minusHp(self):
+        if self.hp > 0:
+            self.hp -= 1
 
 class PlayerMissile:
     PLAYER_MISSILE_SPEED_KMPH = 20.0                    # Km / Hour

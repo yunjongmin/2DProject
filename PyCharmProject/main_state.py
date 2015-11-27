@@ -9,6 +9,7 @@ import game_framework
 import enemy_class
 import player_class
 import obstacle_class
+import title_state
 
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 1000
@@ -152,7 +153,7 @@ def handle_events(frame_time):
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-           game_framework.quit()
+            game_framework.change_state(title_state)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_z:
             player_missile.showMissile(player.x, player.y)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_x:
@@ -165,6 +166,11 @@ def handle_events(frame_time):
 def collide(a, front_index, b, back_index):
     left_a, bottom_a, right_a, top_a = a.get_bb(front_index)
     left_b, bottom_b, right_b, top_b = b.get_bb(back_index)
+
+    if left_a == 0 and bottom_a == 0 and right_a == 0 and top_a == 0:
+        return False
+    if left_b == 0 and bottom_b == 0 and right_b == 0 and top_b == 0:
+        return False
 
     if left_a > right_b :
         return False
@@ -181,6 +187,11 @@ def collide(a, front_index, b, back_index):
 def missile_collide(a, front_index, b, back_index):
     left_a, bottom_a, right_a, top_a = a.get_bb(front_index)
     left_b, bottom_b, right_b, top_b = b.get_missile_bb(back_index)
+
+    if left_a == 0 and bottom_a == 0 and right_a == 0 and top_a == 0:
+        return False
+    if left_b == 0 and bottom_b == 0 and right_b == 0 and top_b == 0:
+        return False
 
     if left_a > right_b :
         return False
@@ -269,6 +280,9 @@ def update(frame_time):
                 monster.set_collisionCheck(j, result, False)
                 if result == True:
                     monster.newCreateMonster()
+                    player.set_minusHp()
+                    # if(player.hp < 1):
+                    #     game_framework.change_state(title_state)
 
     # 캐릭터 미사일과 몬스터 충돌 체크
     for i in range(0, player_missile.collision_area_count):
@@ -300,6 +314,7 @@ def update(frame_time):
                 monster.set_missile_collisionCheck(j, result, False)
                 if result == True:
                     monster.newCreateMonsterMissile(j)
+                    player.set_minusHp()
 
     # 캐릭터와 중간 몬스터 충돌 체크
     for i in range(0, player.collision_area_count):
@@ -310,6 +325,7 @@ def update(frame_time):
                 mid_monster.set_collisionCheck(j, result, False)
                 if result == True:
                     mid_monster.newCreateMidMonster()
+                    player.set_minusHp()
 
     # 캐릭터 미사일과 중간 몬스터 충돌 체크
     for i in range(0, player_missile.collision_area_count):
@@ -341,6 +357,7 @@ def update(frame_time):
                 mid_monster.set_missile_collisionCheck(j, result, False)
                 if result == True:
                     mid_monster.newCreateMidMonsterMissile(j)
+                    player.set_minusHp()
 
      # 캐릭터와 특수 장애물 충돌 체크
     for i in range(0, player.collision_area_count):
