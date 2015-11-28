@@ -59,6 +59,9 @@ class Player:
     # def get_collision_area_count(self):
     #     return self.collision_area_count
 
+    def setShowCheck(self, showCheck):
+        self.showCheck = showCheck
+
     def update(self, frame_time):
         self.life_time += frame_time
         distance = Player.FLY_SPEED_PPS * frame_time
@@ -80,7 +83,7 @@ class Player:
             if self.y > distance :
                 self.y -= distance
 
-        self.showArea();
+        self.showArea(self.showCheck);
 
     def draw(self):
         self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
@@ -88,7 +91,8 @@ class Player:
             self.hpImage.clip_draw(self.hpFrame * 57, 0, 57, 59, self.hpX + (57*i), self.hpY)
 
 
-    def showArea(self):
+    def showArea(self, showCheck):
+        self.showCheck = showCheck
         self.collisionX1[0] = self.x - 20
         self.collisionY1[0] = (self.y+10) - 50
         self.collisionX2[0] = self.x + 20
@@ -102,20 +106,25 @@ class Player:
         self.collisionX2[2] = (self.x+50) + 30
         self.collisionY2[2] = (self.y+8) + 20
 
-        if self.collisionChecks[0] == True:
-            draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
-        else :
-            draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        # if self.collisionChecks[0] == True:
+        #     draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        # else :
+        #     draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        #
+        # if self.collisionChecks[1] == True:
+        #     draw_rectangle_green(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+        # else:
+        #     draw_rectangle_red(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+        #
+        # if self.collisionChecks[2] == True:
+        #     draw_rectangle_green(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        # else:
+        #     draw_rectangle_red(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
 
-        if self.collisionChecks[1] == True:
-            draw_rectangle_green(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
-        else:
-            draw_rectangle_red(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
-
-        if self.collisionChecks[2] == True:
-            draw_rectangle_green(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
-        else:
-            draw_rectangle_red(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
+        if self.showCheck == True:
+            draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+            draw_rectangle(self.collisionX1[1],self.collisionY1[1],self.collisionX2[1],self.collisionY2[1])
+            draw_rectangle(self.collisionX1[2],self.collisionY1[2],self.collisionX2[2],self.collisionY2[2])
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_LEFT:
@@ -156,6 +165,12 @@ class Player:
         if self.hp > 0:
             self.hp -= 1
 
+    def get_game_start(self):
+        if self.hp > 0:
+            return True
+        else:
+            return False
+
 class PlayerMissile:
     PLAYER_MISSILE_SPEED_KMPH = 20.0                    # Km / Hour
     PLAYER_MISSILE_SPEED_MPM = (PLAYER_MISSILE_SPEED_KMPH * 1000.0 / 60.0)
@@ -191,6 +206,9 @@ class PlayerMissile:
         self.life_time = 0.0
         self.total_frames = 0.0
 
+    def setShowCheck(self, showCheck):
+        self.showCheck = showCheck
+
     def showMissile(self, showX, showY):
         i = 0
         while(i < MISSILE_MAX):
@@ -224,8 +242,9 @@ class PlayerMissile:
                     self.image.clip_draw(self.frame * 97, 0, 97, 135, self.x[i] + 2, self.y[i]+ 110)
             i += 1
 
-    def showArea(self):
+    def showArea(self, showCheck):
         i = 0
+        self.showCheck = showCheck
         while(i < MISSILE_MAX):
             if self.show[i] == True:
                 if self.power == MISSILE_POWER_1:
@@ -234,11 +253,12 @@ class PlayerMissile:
                     self.collisionX2[i] = (self.x[i]) + 20
                     self.collisionY2[i] = (self.y[i]+75) + 20
 
-                    if self.collisionChecks[i] == True:
-                        draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
-                    else :
-                        draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
-
+                    # if self.collisionChecks[i] == True:
+                    #     draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                    # else :
+                    #     draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                    if self.showCheck == True:
+                        draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
             i += 1
 
     def get_bb(self, index):
@@ -270,6 +290,7 @@ class SpecialMissile:
 
     image = None
     special_power = SPECIAL_MISSILE_A
+
     def __init__(self):
         self.frame = [0]*SPECIAL_MAX
         self.x = [0]*SPECIAL_MAX
@@ -294,6 +315,9 @@ class SpecialMissile:
 
         self.life_time = 0.0
         self.total_frames = 0.0
+
+    def setShowCheck(self, showCheck):
+        self.showCheck = showCheck
 
     def showSpecial(self, showX, showY):
         i = 0
@@ -330,8 +354,9 @@ class SpecialMissile:
                     self.image.clip_draw(self.frame[i] * 162, 0, 162, 165, self.x[i] + 2, self.y[i]+ 110)
                 i += 1
 
-    def showArea(self):
+    def showArea(self, showCheck):
         i = 0
+        self.showCheck = showCheck
         while(i < SPECIAL_MAX):
             if self.show[i] == True:
                 if self.special_power == SPECIAL_MISSILE_A:
@@ -340,10 +365,12 @@ class SpecialMissile:
                     self.collisionX2[i] = (self.x[i]) + 70
                     self.collisionY2[i] = (self.y[i]+110) + 70
 
-                    if self.collisionChecks[i] == True:
-                        draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
-                    else :
-                        draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                    # if self.collisionChecks[i] == True:
+                    #     draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                    # else :
+                    #     draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                    if self.showCheck == True:
+                        draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
 
                     # draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
             i += 1

@@ -9,7 +9,8 @@ image = None
 
 def enter():
     global image
-    image = load_image('Resource/Etc/start_logo.png')
+    # image = load_image('Resource/Etc/start_logo.png')
+    image = load_image('Resource/Etc/start_logo2.png')
     pass
 
 
@@ -38,11 +39,6 @@ def draw(frame_time):
     image.draw(400, 500)
     update_canvas()
     pass
-
-
-
-
-
 
 
 def update(frame_time):

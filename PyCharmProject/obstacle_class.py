@@ -37,6 +37,9 @@ class Obstacle:
         self.life_time = 0.0
         self.total_frames = 0.0
 
+    def setShowCheck(self, showCheck):
+        self.showCheck = showCheck
+
     def update(self, frame_time):
         self.life_time += frame_time
         distance = Obstacle.FLY_SPEED_PPS * frame_time
@@ -51,16 +54,19 @@ class Obstacle:
     def draw(self):
          self.image.clip_draw(0, 0, 86, 135, self.x, self.y)
 
-    def showArea(self):
+    def showArea(self, showCheck):
+        self.showCheck = showCheck
         self.collisionX1[0] = (self.x) - 40
         self.collisionY1[0] = (self.y-25) - 40
         self.collisionX2[0] = (self.x) + 40
         self.collisionY2[0] = (self.y-25) + 40
 
-        if self.collisionChecks[0] == True:
-            draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
-        else :
-            draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        # if self.collisionChecks[0] == True:
+        #     draw_rectangle_green(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        # else :
+        #     draw_rectangle_red(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
+        if self.showCheck == True:
+            draw_rectangle(self.collisionX1[0],self.collisionY1[0],self.collisionX2[0],self.collisionY2[0])
 
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
