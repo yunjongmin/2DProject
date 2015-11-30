@@ -12,11 +12,9 @@ MONSTER_MISSILE_POWER_1 = 0
 MONSTER_MISSILE_POWER_2 = 1
 MID_MONSTER_LIMIT_MOVE = 100
 
-MONSTER_HP_MAX = 100
-MONSTER_MISSILE_POWER = 5
+MONSTER_HP_MAX = 2
 
-MID_MONSTER_HP_MAX = 300
-MID_MONSTER_MISSILE_POWER = 10
+MID_MONSTER_HP_MAX = 4
 
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
@@ -52,7 +50,6 @@ class Monster:
         self.frame = random.randint(0, 3)
         self.flag = random.randint(MONSTER_BLUE, MONSTER_PINK)
         self.hp = MONSTER_HP_MAX
-        self.missile_power = MONSTER_MISSILE_POWER
 
         if Monster.image_blue == None:
             Monster.image_blue = load_image('Resource/Monster/monster_blue.png')
@@ -262,8 +259,12 @@ class Monster:
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
             if value == True:
-                self.showExplosion(self.x, self.y)
-                Monster.dieSound.play()
+                if self.hp > 1:
+                    self.hp -= 1
+                else :
+                    self.showExplosion(self.x, self.y)
+                    self.newCreateMonster()
+                    Monster.dieSound.play()
 
     def get_missile_bb(self, index):
         if self.missile_show[index]:
@@ -276,6 +277,8 @@ class Monster:
             self.missile_collisionChecks[index] = value
         elif self.missile_collisionChecks[index] == False:
             self.missile_collisionChecks[index] = value
+
+
 
 
 class MidMonster:
@@ -308,7 +311,6 @@ class MidMonster:
         self.limitMove = MID_MONSTER_LIMIT_MOVE
         self.moveX = random.randint(0, 50)
         self.hp = MID_MONSTER_HP_MAX
-        self.missile_power = MID_MONSTER_MISSILE_POWER
 
         if MidMonster.image_red == None:
             MidMonster.image_red = load_image('Resource/Monster/mid_boss_red.png')
@@ -531,8 +533,12 @@ class MidMonster:
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
             if value == True:
-                self.showExplosion(self.x, self.y)
-                MidMonster.dieSound.play()
+                if self.hp > 1:
+                    self.hp -= 1
+                else :
+                    self.showExplosion(self.x, self.y)
+                    self.newCreateMidMonster()
+                    MidMonster.dieSound.play()
 
     def get_missile_bb(self, index):
         # return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
