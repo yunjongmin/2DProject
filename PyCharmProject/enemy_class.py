@@ -50,6 +50,7 @@ class Monster:
         self.frame = random.randint(0, 3)
         self.flag = random.randint(MONSTER_BLUE, MONSTER_PINK)
         self.hp = MONSTER_HP_MAX
+        self.socre = self.hp * 100
 
         if Monster.image_blue == None:
             Monster.image_blue = load_image('Resource/Monster/monster_blue.png')
@@ -278,6 +279,16 @@ class Monster:
         elif self.missile_collisionChecks[index] == False:
             self.missile_collisionChecks[index] = value
 
+    def get_score(self):
+        if self.hp == MONSTER_HP_MAX:
+            return self.socre
+        else:
+            return 0
+
+
+    def get_hp(self):
+        return self.hp
+
 
 
 
@@ -311,6 +322,7 @@ class MidMonster:
         self.limitMove = MID_MONSTER_LIMIT_MOVE
         self.moveX = random.randint(0, 50)
         self.hp = MID_MONSTER_HP_MAX
+        self.socre = self.hp * 100
 
         if MidMonster.image_red == None:
             MidMonster.image_red = load_image('Resource/Monster/mid_boss_red.png')
@@ -552,6 +564,15 @@ class MidMonster:
             self.missile_collisionChecks[index] = value
         elif self.missile_collisionChecks[index] == False:
             self.missile_collisionChecks[index] = value
+
+    def get_hp(self):
+        return self.hp
+
+    def get_score(self):
+        if self.hp == MID_MONSTER_HP_MAX:
+            return self.socre
+        else:
+            return 0
 
 
 # class Explosion:

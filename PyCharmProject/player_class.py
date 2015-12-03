@@ -39,6 +39,7 @@ class Player:
         self.hpX, self.hpY = 50, 50
         self.frame = 0
         self.hpFrame = 0
+        self.playerScore = 0
         if Player.image == None :
             Player.image = load_image('Resource/Character/character1.png')
         if Player.hpImage == None :
@@ -170,6 +171,13 @@ class Player:
             return True
         else:
             return False
+
+    def plus_score(self, score):
+        self.playerScore = self.playerScore + score
+        print("Score : %d" % self.playerScore)
+
+    def get_score(self):
+        return self.playerScore
 
 class PlayerMissile:
     PLAYER_MISSILE_SPEED_KMPH = 20.0                    # Km / Hour

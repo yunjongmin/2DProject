@@ -10,6 +10,7 @@ import enemy_class
 import player_class
 import obstacle_class
 import title_state
+import textUI_class
 
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 1000
@@ -32,7 +33,7 @@ player_missile = None
 # mid_monster_missile1 = None
 obstacle = None
 player_special_missile = None
-# r = 100
+textUI = None
 
 
 class Background:
@@ -105,6 +106,7 @@ def create_world():
     global obstacle
     global player_special_missile
     global collisionRectShow
+    global textUI
 
     collisionRectShow = False
 
@@ -119,6 +121,7 @@ def create_world():
     obstacle = obstacle_class.Obstacle()
     player_special_missile = player_class.SpecialMissile()
     player_special_missile.setShowCheck(collisionRectShow)
+    textUI = textUI_class.TextUI()
 
     # global explosion
     # explosion = enemy_class.Explosion()
@@ -133,6 +136,7 @@ def destroy_world():
     global player_missile
     global obstacle
     global player_special_missile
+    global textUI
 
     del(background)
     del(player)
@@ -142,6 +146,7 @@ def destroy_world():
     del(player_missile)
     del(obstacle)
     del(player_special_missile)
+    del(textUI)
 
     # global explosion
     # del(explosion)
@@ -297,6 +302,7 @@ def update(frame_time):
                     player_missile.set_collisionCheck(i, result, False)
                     monster.set_collisionCheck(j, result, False)
                     if result == True:
+                        player.plus_score(monster.get_score())
                         player_missile.delete_missile(i)
                         # monster.newCreateMonster()
 
@@ -308,6 +314,7 @@ def update(frame_time):
                     player_special_missile.set_collisionCheck(i, result, False)
                     monster.set_collisionCheck(j, result, False)
                     if result == True:
+                        player.plus_score(monster.get_score())
                         monster.newCreateMonster()
 
         # 캐릭터와 몬스터 미사일과 충돌 체크
@@ -340,6 +347,7 @@ def update(frame_time):
                     player_missile.set_collisionCheck(i, result, False)
                     mid_monster.set_collisionCheck(j, result, False)
                     if result == True:
+                        player.plus_score(mid_monster.get_score())
                         player_missile.delete_missile(i)
                         # mid_monster.newCreateMidMonster()
 
@@ -351,6 +359,7 @@ def update(frame_time):
                     player_special_missile.set_collisionCheck(i, result, False)
                     mid_monster.set_collisionCheck(j, result, False)
                     if result == True:
+                        player.plus_score(mid_monster.get_score())
                         mid_monster.newCreateMidMonster()
 
         # 캐릭터와 중간 몬스터 미사일과 충돌 체크
@@ -371,6 +380,7 @@ def update(frame_time):
                 player.set_collisionCheck(i, result, False)
                 obstacle.set_collisionCheck(j, result, False)
 
+    textUI.set_playerScore(player.get_score())
     background.update(frame_time)
     for monster in monsters:
         monster.update(frame_time)
@@ -403,6 +413,7 @@ def draw(frame_time):
         player_missile.draw()
         player_special_missile.draw()
         player.draw()
+    textUI.draw()
 
     # if collisionRectShow == True:
     player.showArea(collisionRectShow)

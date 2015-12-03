@@ -104,7 +104,6 @@ index = 0
 
 resources = []
 
-# resources = os.listdir('I:/2DProject/PyCharmProject/Resource/Background')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Background')
 for f in resourcesArray:
     if index == 0:
@@ -113,7 +112,6 @@ for f in resourcesArray:
     else:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Background', f))
 
-# resources = resources + os.listdir('I:/2DProject/PyCharmProject/Resource/Character')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Character')
 for f in resourcesArray:
     if index == 0:
@@ -123,7 +121,6 @@ for f in resourcesArray:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Character', f))
 
 
-# resources = resources + os.listdir('I:/2DProject/PyCharmProject/Resource/Etc')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Etc')
 for f in resourcesArray:
     if index == 0:
@@ -132,7 +129,6 @@ for f in resourcesArray:
     else:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Etc', f))
 
-# resources = resources + os.listdir('I:/2DProject/PyCharmProject/Resource/Explosion')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Explosion')
 for f in resourcesArray:
     if index == 0:
@@ -141,7 +137,6 @@ for f in resourcesArray:
     else:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Explosion', f))
 
-# resources = resources + os.listdir('I:/2DProject/PyCharmProject/Resource/Missile')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Missile')
 for f in resourcesArray:
     if index == 0:
@@ -150,7 +145,6 @@ for f in resourcesArray:
     else:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Missile', f))
 
-# resources = resources + os.listdir('I:/2DProject/PyCharmProject/Resource/Monster')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Monster')
 for f in resourcesArray:
     if index == 0:
@@ -159,7 +153,6 @@ for f in resourcesArray:
     else:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Monster', f))
 
-# resources = resources + os.listdir('I:/2DProject/PyCharmProject/Resource/Sound')
 resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Sound')
 for f in resourcesArray:
     if index == 0:
@@ -168,6 +161,13 @@ for f in resourcesArray:
     else:
         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Sound', f))
 
+resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Font')
+for f in resourcesArray:
+    if index == 0:
+        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Font', f)]
+        index = index + 1
+    else:
+        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Font', f))
 
 
 if platform.architecture()[0] == '32bit':
