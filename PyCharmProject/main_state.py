@@ -28,12 +28,13 @@ background = None
 player = None
 monsters = None
 mid_monsters = None
-# boss_monster1 = None
+boss_monster = None
 player_missile = None
 # mid_monster_missile1 = None
 obstacle = None
 player_special_missile = None
 textUI = None
+
 
 
 class Background:
@@ -79,7 +80,7 @@ class Background:
 #         self.y = self.nomalY +(r*math.cos((self.degree/360)*math.pi))
 #
 #         if BossMonster1.image == None:
-#             BossMonster1.image = load_image('Resource/Monster/boss1.png')
+#             BossMonster1.image = load_image('Resource/Monster/boss.png')
 #
 #     def update(self):
 #         self.frame = (self.frame + 1) % 3
@@ -102,11 +103,11 @@ def create_world():
     global monsters
     global mid_monsters
     global player_missile
-    # global boss_monster1
     global obstacle
     global player_special_missile
     global collisionRectShow
     global textUI
+    global boss_monster
 
     collisionRectShow = False
 
@@ -115,7 +116,7 @@ def create_world():
     player.setShowCheck(collisionRectShow)
     monsters = [enemy_class.Monster() for i in range(5)]
     mid_monsters = [enemy_class.MidMonster() for i in range(2)]
-    # boss_monster1 = BossMonster1()
+    boss_monster = enemy_class.BossMonster()
     player_missile =  player_class.PlayerMissile()
     player_missile.setShowCheck(collisionRectShow)
     obstacle = obstacle_class.Obstacle()
@@ -132,17 +133,18 @@ def destroy_world():
     global player
     global monsters
     global mid_monsters
-    # global boss_monster1
+    global boss_monster
     global player_missile
     global obstacle
     global player_special_missile
     global textUI
 
+
     del(background)
     del(player)
     del(monsters)
     del(mid_monsters)
-    # del(boss_monster1)
+    del(boss_monster)
     del(player_missile)
     del(obstacle)
     del(player_special_missile)
@@ -386,7 +388,7 @@ def update(frame_time):
         monster.update(frame_time)
     for mid_monster in mid_monsters:
         mid_monster.update(frame_time)
-    # boss_monster1.update()
+    boss_monster.update(frame_time)
     obstacle.update(frame_time)
 
     if player.get_game_start() == True:
@@ -408,7 +410,7 @@ def draw(frame_time):
     for mid_monster in mid_monsters:
         mid_monster.draw()
     obstacle.draw()
-    # boss_monster1.draw()
+    boss_monster.draw()
     if player.get_game_start() == True:
         player_missile.draw()
         player_special_missile.draw()
@@ -419,6 +421,7 @@ def draw(frame_time):
     player.showArea(collisionRectShow)
     player_missile.showArea(collisionRectShow)
     player_special_missile.showArea(collisionRectShow)
+    boss_monster.showArea(collisionRectShow)
     for monster in monsters:
         monster.showArea(collisionRectShow)
     for mid_monster in mid_monsters:
