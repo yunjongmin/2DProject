@@ -594,16 +594,16 @@ class BossMonster:
 
     def __init__(self):
         # 몬스터 관련 변수
-        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
+        # self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
+        self.x = CANVAS_WIDTH / 2
+        self.y = CANVAS_HEIGHT+CANVAS_HEIGHT/2
+        self.stopY = CANVAS_HEIGHT - (CANVAS_HEIGHT/4)
         self.frame = random.randint(0, 3)
-        if random.randint(0, 1) == 0 :
-            self.rightMove = True
-        else:
-            self.rightMove = False
-        self.limitMove = MID_MONSTER_LIMIT_MOVE
-        self.moveX = random.randint(0, 50)
         self.hp = MID_MONSTER_HP_MAX
         self.socre = self.hp * 100
+        self.degree = 0
+        self.r = 100
+        self.nomalX, self.nomalY = self.x, self.stopY -100
 
         if BossMonster.image_red == None:
             BossMonster.image_red = load_image('Resource/Monster/boss.png')
@@ -652,14 +652,6 @@ class BossMonster:
         self.showCheck = showCheck
 
     def newCreateBossMonster(self):
-        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
-        self.frame = random.randint(0, 3)
-        if random.randint(0, 1) == 0 :
-            self.rightMove = True
-        else:
-            self.rightMove = False
-        self.limitMove = MID_MONSTER_LIMIT_MOVE
-        self.moveX = random.randint(0, 50)
         self.hp = MID_MONSTER_HP_MAX
 
     def newCreateBossMonsterMissile(self, index):
@@ -678,25 +670,16 @@ class BossMonster:
         self.frame = int(self.total_frames/5) % 3
         # self.frame = (self.frame + 1) % 3
         if self.y > 0 :
-            if self.rightMove == True:
-                self.x = self.x + distance
-                self.moveX = self.moveX + distance
-                if self.moveX > self.limitMove:
-                    self.rightMove = False
-                    self.moveX = 0
-                elif self.x > CANVAS_WIDTH:
-                    self.rightMove = False
-                    self.moveX = 0
+            if self.y > self.stopY:
+                self.y = self.y - distance
             else:
-                self.x = self.x - distance
-                self.moveX = self.moveX + distance
-                if self.moveX > self.limitMove:
-                    self.rightMove = True
-                    self.moveX = 0
-                elif self.x < 0:
-                    self.rightMove = True
-                    self.moveX = 0
-            self.y = self.y - distance
+                self.x = self.nomalX +(self.r*math.sin((self.degree/360)*math.pi))
+                self.y = self.nomalY +(self.r*math.cos((self.degree/360)*math.pi))
+                if self.degree < 710:
+                    self.degree += 10
+                else:
+                    self.degree = 0
+
         else:
             self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)
 
