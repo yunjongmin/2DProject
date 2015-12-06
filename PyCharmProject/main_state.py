@@ -30,6 +30,7 @@ monsters = None
 mid_monsters = None
 boss_monster = None
 player_missile = None
+player_protect_missile = None
 # mid_monster_missile1 = None
 obstacle = None
 player_special_missile = None
@@ -103,6 +104,7 @@ def create_world():
     global monsters
     global mid_monsters
     global player_missile
+    global player_protect_missile
     global obstacle
     global player_special_missile
     global collisionRectShow
@@ -119,6 +121,8 @@ def create_world():
     boss_monster = enemy_class.BossMonster()
     player_missile =  player_class.PlayerMissile()
     player_missile.setShowCheck(collisionRectShow)
+    player_protect_missile =  player_class.PlayerMissile_S()
+    player_protect_missile.setShowCheck(collisionRectShow)
     obstacle = obstacle_class.Obstacle()
     player_special_missile = player_class.SpecialMissile()
     player_special_missile.setShowCheck(collisionRectShow)
@@ -135,6 +139,7 @@ def destroy_world():
     global mid_monsters
     global boss_monster
     global player_missile
+    global player_protect_missile
     global obstacle
     global player_special_missile
     global textUI
@@ -146,6 +151,7 @@ def destroy_world():
     del(mid_monsters)
     del(boss_monster)
     del(player_missile)
+    del(player_protect_missile)
     del(obstacle)
     del(player_special_missile)
     del(textUI)
@@ -180,7 +186,10 @@ def handle_events(frame_time):
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_state(title_state)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_z:
-            player_missile.showMissile(player.x, player.y)
+            if player.get_player() == player_class.PLAYER_A :
+                player_missile.showMissile(player.x, player.y)
+            elif player.get_player() == player_class.PLAYER_S :
+                player_protect_missile.showMissile(player.x, player.y)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_x:
             player_special_missile.showSpecial(player.x, player.y)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_r:
@@ -247,6 +256,10 @@ def update(frame_time):
         if player_missile.collisionChecks[i] == True:
             player_missile.set_collisionCheck(i, False, True)
 
+    # 캐릭터_S 미사일 영역 초기화
+    if player_protect_missile.collisionCheck == True:
+        player_protect_missile.set_collisionCheck(False, True)
+
     # 캐릭터 특수 미사일 영역 초기화
     for i in range(0, player_special_missile.collision_area_count):
         if player_special_missile.collisionChecks[i] == True:
@@ -307,6 +320,24 @@ def update(frame_time):
                         player.plus_score(monster.get_score())
                         player_missile.delete_missile(i)
                         # monster.newCreateMonster()
+
+         # 캐릭터_S 미사일과 몬스터 미사일과 충돌 체크
+        for monster in monsters:
+            for j in range(0, monster.missile_collision_area_count):
+                result = missile_collide(player_protect_missile, 0, monster, j)
+                player_protect_missile.set_collisionCheck(result, False)
+                monster.set_missile_collisionCheck(j, result, False)
+                if result == True:
+                    monster.newCreateMonsterMissile(j)
+
+                 # 캐릭터_S 미사일과 몬스터 미사일과 충돌 체크
+        for mid_monster in mid_monsters:
+            for j in range(0, mid_monster.missile_collision_area_count):
+                result = missile_collide(player_protect_missile, 0, mid_monster, j)
+                player_protect_missile.set_collisionCheck(result, False)
+                mid_monster.set_missile_collisionCheck(j, result, False)
+                if result == True:
+                    mid_monster.newCreateMidMonsterMissile(j)
 
         # 캐릭터 특수 미사일과 몬스터 충돌 체크
         for i in range(0, player_special_missile.collision_area_count):
@@ -388,11 +419,12 @@ def update(frame_time):
         monster.update(frame_time)
     for mid_monster in mid_monsters:
         mid_monster.update(frame_time)
-    boss_monster.update(frame_time)
+    # boss_monster.update(frame_time)
     obstacle.update(frame_time)
 
     if player.get_game_start() == True:
         player_missile.update(frame_time)
+        player_protect_missile.update(frame_time, player.get_playerX(), player.get_playerY())
         player_special_missile.update(frame_time)
         player.update(frame_time)
 
@@ -410,9 +442,10 @@ def draw(frame_time):
     for mid_monster in mid_monsters:
         mid_monster.draw()
     obstacle.draw()
-    boss_monster.draw()
+    # boss_monster.draw()
     if player.get_game_start() == True:
         player_missile.draw()
+        player_protect_missile.draw()
         player_special_missile.draw()
         player.draw()
     textUI.draw()
@@ -420,8 +453,9 @@ def draw(frame_time):
     # if collisionRectShow == True:
     player.showArea(collisionRectShow)
     player_missile.showArea(collisionRectShow)
+    player_protect_missile.showArea(collisionRectShow)
     player_special_missile.showArea(collisionRectShow)
-    boss_monster.showArea(collisionRectShow)
+    # boss_monster.showArea(collisionRectShow)
     for monster in monsters:
         monster.showArea(collisionRectShow)
     for mid_monster in mid_monsters:

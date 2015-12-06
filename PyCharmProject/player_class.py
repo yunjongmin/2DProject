@@ -12,6 +12,8 @@ MISSILE_POWER_2 = 2
 SPECIAL_MAX = 3
 SPECIAL_MISSILE_A = 1
 PLAYER_HP_MAX = 5
+PLAYER_A = 1
+PLAYER_S = 2
 
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
@@ -28,6 +30,7 @@ class Player:
 
     hp = PLAYER_HP_MAX
     image = None
+    image_s = None
     hpImage = None
     moveRight = None
     moveLeft = None
@@ -42,6 +45,8 @@ class Player:
         self.playerScore = 0
         if Player.image == None :
             Player.image = load_image('Resource/Character/character1.png')
+        if Player.image_s == None :
+            Player.image_s = load_image('Resource/Character/character2.png')
         if Player.hpImage == None :
             Player.hpImage = load_image('Resource/Etc/hp.png')
 
@@ -56,6 +61,8 @@ class Player:
 
         self.life_time = 0.0
         self.total_frames = 0.0
+
+        self.player = PLAYER_A
 
     # def get_collision_area_count(self):
     #     return self.collision_area_count
@@ -87,7 +94,10 @@ class Player:
         self.showArea(self.showCheck);
 
     def draw(self):
-        self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
+        if self.player == PLAYER_A:
+            self.image.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
+        elif self.player == PLAYER_S:
+            self.image_s.clip_draw(self.frame * 170, 0, 170, 128, self.x, self.y)
         for i in range(0, self.hp) :
             self.hpImage.clip_draw(self.hpFrame * 57, 0, 57, 59, self.hpX + (57*i), self.hpY)
 
@@ -152,6 +162,11 @@ class Player:
             self.moveDown = True
         elif event.type == SDL_KEYUP and event.key == SDLK_DOWN:
             self.moveDown = False
+        elif event.type == SDL_KEYUP and event.key == SDLK_a:
+            self.player = PLAYER_A
+        elif event.type == SDL_KEYUP and event.key == SDLK_s:
+            self.player = PLAYER_S
+
 
     def get_bb(self, index):
         return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
@@ -174,10 +189,20 @@ class Player:
 
     def plus_score(self, score):
         self.playerScore = self.playerScore + score
-        print("Score : %d" % self.playerScore)
 
     def get_score(self):
         return self.playerScore
+
+    def get_player(self):
+        return self.player
+
+    def get_playerX(self):
+        return self.x
+
+    def get_playerY(self):
+        return self.y
+
+
 
 class PlayerMissile:
     PLAYER_MISSILE_SPEED_KMPH = 20.0                    # Km / Hour
@@ -391,3 +416,91 @@ class SpecialMissile:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+
+
+class PlayerMissile_S:
+
+    image = None
+    power = MISSILE_POWER_1
+    missileSound = None
+
+    collision_area_count = MISSILE_MAX
+
+    def __init__(self):
+        self.x = 0
+        self.y= 0
+        self.show = False
+        if PlayerMissile_S.image == None:
+            PlayerMissile_S.image = load_image('Resource/Missile/protect_missile.png')
+        if PlayerMissile_S.missileSound == None:
+            PlayerMissile_S.missileSound = load_wav('Resource/Sound/missile_show.wav')
+            PlayerMissile_S.missileSound.set_volume(5)
+
+        self.collisionX1 = 0
+        self.collisionY1= 0
+        self.collisionX2 = 0
+        self.collisionY2= 0
+        self.collisionCheck= False
+
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
+    def setShowCheck(self, showCheck):
+        self.showCheck = showCheck
+
+    def showMissile(self, showX, showY):
+        self.show = True
+        self.x = showX
+        self.y = showY
+        self.life_time = 0.0
+        self.missileSound.play()
+
+    def update(self, frame_time, playerX, playerY):
+        self.life_time += frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+        print(" self.life_time:", self.life_time)
+        print(" self.total_frames:", self.total_frames)
+        if self.show == True:
+            self.x = playerX
+            self.y = playerY
+            if self.life_time > 3:
+                self.show = False
+
+    def draw(self):
+        if self.show == True:
+            if self.power == MISSILE_POWER_1:
+                self.image.clip_draw(0, 0, 180, 180, self.x-8, self.y)
+
+    def showArea(self, showCheck):
+        self.showCheck = showCheck
+        if self.show == True:
+            if self.power == MISSILE_POWER_1:
+                self.collisionX1 = (self.x+3) - 100
+                self.collisionY1 = (self.y+12) - 80
+                self.collisionX2 = (self.x+3) + 100
+                self.collisionY2 = (self.y+12) + 80
+
+                # if self.collisionChecks[i] == True:
+                #     draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                # else :
+                #     draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                if self.showCheck == True:
+                    draw_rectangle(self.collisionX1,self.collisionY1,self.collisionX2,self.collisionY2)
+
+    def get_bb(self, index):
+        return self.collisionX1, self.collisionY1, self.collisionX2, self.collisionY2
+
+    def set_collisionCheck(self, value, change):
+        if change == True:
+            self.collisionCheck = value
+        elif self.collisionCheck == False:
+            self.collisionCheck = value
+
+    def delete_missile(self):
+        self.show= False
+        self.x = -1
+        self.y = -1
+        self.collisionX1 = -1
+        self.collisionY1 = -1
+        self.collisionX2 = -1
+        self.collisionY2 = -1

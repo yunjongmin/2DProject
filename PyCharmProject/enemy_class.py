@@ -13,8 +13,8 @@ MONSTER_MISSILE_POWER_2 = 1
 MID_MONSTER_LIMIT_MOVE = 100
 
 MONSTER_HP_MAX = 2
-
 MID_MONSTER_HP_MAX = 4
+BOSS_MONSTER_HP_MAX = 10
 
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
@@ -599,7 +599,7 @@ class BossMonster:
         self.y = CANVAS_HEIGHT+CANVAS_HEIGHT/2
         self.stopY = CANVAS_HEIGHT - (CANVAS_HEIGHT/4)
         self.frame = random.randint(0, 3)
-        self.hp = MID_MONSTER_HP_MAX
+        self.hp = BOSS_MONSTER_HP_MAX
         self.socre = self.hp * 100
         self.degree = 0
         self.r = 100
@@ -621,22 +621,42 @@ class BossMonster:
             self.collisionCheck = False
 
         # 미사일 관련 변수
+        if BossMonster.image_missile == None:
+            BossMonster.image_missile = load_image('Resource/Missile/monster_missile.png')
         self.missile_frame = MONSTER_MISSILE_POWER_2
+
         self.missile_x = [0]*MISSILE_MAX
         self.missile_y= [0]*MISSILE_MAX
         self.missile_show= [0]*MISSILE_MAX
-
-        if BossMonster.image_missile == None:
-            BossMonster.image_missile = load_image('Resource/Missile/monster_missile.png')
-
         self.missile_collisionX1 = [0]*MISSILE_MAX
         self.missile_collisionY1= [0]*MISSILE_MAX
         self.missile_collisionX2 = [0]*MISSILE_MAX
         self.missile_collisionY2= [0]*MISSILE_MAX
         self.missile_collisionChecks= [0]*MISSILE_MAX
-
         for self.missile_collisionCheck in self.missile_collisionChecks:
             self.missile_collisionCheck = False
+
+        self.left_missile_x = [0]*MISSILE_MAX
+        self.left_missile_y= [0]*MISSILE_MAX
+        self.left_missile_show= [0]*MISSILE_MAX
+        self.left_missile_collisionX1 = [0]*MISSILE_MAX
+        self.left_missile_collisionY1= [0]*MISSILE_MAX
+        self.left_missile_collisionX2 = [0]*MISSILE_MAX
+        self.left_missile_collisionY2= [0]*MISSILE_MAX
+        self.left_missile_collisionChecks= [0]*MISSILE_MAX
+        for self.left_missile_collisionCheck in self.left_missile_collisionChecks:
+            self.left_missile_collisionCheck = False
+
+        self.right_missile_x = [0]*MISSILE_MAX
+        self.right_missile_y= [0]*MISSILE_MAX
+        self.right_missile_show= [0]*MISSILE_MAX
+        self.right_missile_collisionX1 = [0]*MISSILE_MAX
+        self.right_missile_collisionY1= [0]*MISSILE_MAX
+        self.right_missile_collisionX2 = [0]*MISSILE_MAX
+        self.right_missile_collisionY2= [0]*MISSILE_MAX
+        self.right_missile_collisionChecks= [0]*MISSILE_MAX
+        for self.right_missile_collisionCheck in self.right_missile_collisionChecks:
+            self.right_missile_collisionCheck = False
 
         # 폭발 관련 변수
         self.explosion_show = False
@@ -652,7 +672,7 @@ class BossMonster:
         self.showCheck = showCheck
 
     def newCreateBossMonster(self):
-        self.hp = MID_MONSTER_HP_MAX
+        self.hp = BOSS_MONSTER_HP_MAX
 
     def newCreateBossMonsterMissile(self, index):
         self.missile_show[index] = False
@@ -697,6 +717,28 @@ class BossMonster:
             i += 1
         self.showMissile(self.x, self.y)
 
+        i = 0
+        while(i < MISSILE_MAX):
+            if self.left_missile_show[i] == True:
+                if self.left_missile_y[i] > 0:
+                    self.left_missile_y[i] -= distance
+                    self.left_missile_x[i] -= distance*(0.5)
+                else:
+                    self.left_missile_show[i] = False
+            i += 1
+        self.showLeftMissile(self.x, self.y)
+
+        i = 0
+        while(i < MISSILE_MAX):
+            if self.right_missile_show[i] == True:
+                if self.right_missile_y[i] > 0:
+                    self.right_missile_y[i] -= distance
+                    self.right_missile_x[i] += distance*(0.5)
+                else:
+                    self.right_missile_show[i] = False
+            i += 1
+        self.showRightMissile(self.x, self.y)
+
         # 폭발
         if self.explosion_show == True:
             self.explosion_time += frame_time
@@ -715,6 +757,10 @@ class BossMonster:
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
                 self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.missile_x[i] - 2, self.missile_y[i] - 30)
+            if self.left_missile_show[i] == True:
+                self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.left_missile_x[i] - 2, self.left_missile_y[i] - 30)
+            if self.right_missile_show[i] == True:
+                self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.right_missile_x[i] - 2, self.right_missile_y[i] - 30)
             i += 1
 
         # 폭발관련
@@ -775,6 +821,32 @@ class BossMonster:
                 if self.showCheck == True:
                     draw_rectangle(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
 
+            if self.left_missile_show[i] == True:
+                self.left_missile_collisionX1[i] = (self.left_missile_x[i]-3) - 4
+                self.left_missile_collisionY1[i] = (self.left_missile_y[i]-30) + 4
+                self.left_missile_collisionX2[i] = (self.left_missile_x[i]-3) + 4
+                self.left_missile_collisionY2[i] = (self.left_missile_y[i]-30) - 4
+
+                # if self.missile_collisionChecks[i] == True:
+                #     draw_rectangle_green(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                # else :
+                #     draw_rectangle_red(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                if self.showCheck == True:
+                    draw_rectangle(self.left_missile_collisionX1[i],self.left_missile_collisionY1[i],self.left_missile_collisionX2[i],self.left_missile_collisionY2[i])
+
+            if self.right_missile_show[i] == True:
+                self.right_missile_collisionX1[i] = (self.right_missile_x[i]-3) - 4
+                self.right_missile_collisionY1[i] = (self.right_missile_y[i]-30) + 4
+                self.right_missile_collisionX2[i] = (self.right_missile_x[i]-3) + 4
+                self.right_missile_collisionY2[i] = (self.right_missile_y[i]-30) - 4
+
+                # if self.missile_collisionChecks[i] == True:
+                #     draw_rectangle_green(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                # else :
+                #     draw_rectangle_red(self.missile_collisionX1[i],self.missile_collisionY1[i],self.missile_collisionX2[i],self.missile_collisionY2[i])
+                if self.showCheck == True:
+                    draw_rectangle(self.right_missile_collisionX1[i],self.right_missile_collisionY1[i],self.right_missile_collisionX2[i],self.right_missile_collisionY2[i])
+
             i += 1
 
     def showMissile(self, showX, showY):
@@ -787,6 +859,32 @@ class BossMonster:
                         self.missile_show[i] = True
                         self.missile_x[i] = showX
                         self.missile_y[i] = showY
+                        break
+                i += 1
+
+    def showLeftMissile(self, showX, showY):
+        i = 0
+        if showY < CANVAS_HEIGHT:
+            while(i < MISSILE_MAX):
+                self.checkInt = random.randint(0, 10000)
+                if self.checkInt > 9995:
+                    if self.left_missile_show[i] == False:
+                        self.left_missile_show[i] = True
+                        self.left_missile_x[i] = showX
+                        self.left_missile_y[i] = showY
+                        break
+                i += 1
+
+    def showRightMissile(self, showX, showY):
+        i = 0
+        if showY < CANVAS_HEIGHT:
+            while(i < MISSILE_MAX):
+                self.checkInt = random.randint(0, 10000)
+                if self.checkInt > 9995:
+                    if self.right_missile_show[i] == False:
+                        self.right_missile_show[i] = True
+                        self.right_missile_x[i] = showX
+                        self.right_missile_y[i] = showY
                         break
                 i += 1
 
@@ -827,11 +925,37 @@ class BossMonster:
         elif self.missile_collisionChecks[index] == False:
             self.missile_collisionChecks[index] = value
 
+    def get_left_missile_bb(self, index):
+        # return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        if self.left_missile_show[index]:
+            return self.left_missile_collisionX1[index], self.left_missile_collisionY1[index], self.left_missile_collisionX2[index], self.left_missile_collisionY2[index]
+        else:
+            return -100, -100, -100, -100
+
+    def set_left_missile_collisionCheck(self, index, value, change):
+        if change == True:
+            self.left_missile_collisionChecks[index] = value
+        elif self.left_missile_collisionChecks[index] == False:
+            self.left_missile_collisionChecks[index] = value
+
+    def get_right_missile_bb(self, index):
+        # return self.missile_collisionX1[index], self.missile_collisionY1[index], self.missile_collisionX2[index], self.missile_collisionY2[index]
+        if self.right_missile_show[index]:
+            return self.right_missile_collisionX1[index], self.right_missile_collisionY1[index], self.right_missile_collisionX2[index], self.right_missile_collisionY2[index]
+        else:
+            return -100, -100, -100, -100
+
+    def set_right_missile_collisionCheck(self, index, value, change):
+        if change == True:
+            self.right_missile_collisionChecks[index] = value
+        elif self.right_missile_collisionChecks[index] == False:
+            self.right_missile_collisionChecks[index] = value
+
     def get_hp(self):
         return self.hp
 
     def get_score(self):
-        if self.hp == MID_MONSTER_HP_MAX:
+        if self.hp == BOSS_MONSTER_HP_MAX:
             return self.socre
         else:
             return 0
