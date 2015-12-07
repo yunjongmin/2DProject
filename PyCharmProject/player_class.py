@@ -463,8 +463,14 @@ class PlayerMissile_S:
         if self.show == True:
             self.x = playerX
             self.y = playerY
-            if self.life_time > 3:
-                self.show = False
+            if self.life_time > 2:
+                self.show= False
+                self.x = -1
+                self.y = -1
+                self.collisionX1 = -1
+                self.collisionY1 = -1
+                self.collisionX2 = -1
+                self.collisionY2 = -1
 
     def draw(self):
         if self.show == True:
