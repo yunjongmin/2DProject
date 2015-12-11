@@ -9,8 +9,7 @@ COLLISION_AREA_3 = 3
 MISSILE_MAX = 100
 MISSILE_POWER_1 = 1
 MISSILE_POWER_2 = 2
-SPECIAL_MAX = 3
-SPECIAL_MISSILE_A = 1
+SPECIAL_MAX = 1
 PLAYER_HP_MAX = 5
 PLAYER_A = 1
 PLAYER_S = 2
@@ -225,7 +224,7 @@ class PlayerMissile:
             PlayerMissile.image = load_image('Resource/Missile/missile1.png')
         if PlayerMissile.missileSound == None:
             PlayerMissile.missileSound = load_wav('Resource/Sound/missile_show.wav')
-            PlayerMissile.missileSound.set_volume(5)
+            PlayerMissile.missileSound.set_volume(50)
 
         self.collisionX1 = [0]*MISSILE_MAX
         self.collisionY1= [0]*MISSILE_MAX
@@ -322,7 +321,7 @@ class SpecialMissile:
     collision_area_count = SPECIAL_MAX
 
     image = None
-    special_power = SPECIAL_MISSILE_A
+    sound = None
 
     def __init__(self):
         self.frame = [0]*SPECIAL_MAX
@@ -336,6 +335,9 @@ class SpecialMissile:
 
         if SpecialMissile.image == None:
             SpecialMissile.image = load_image('Resource/Missile/special1.png')
+        if SpecialMissile.sound == None:
+            SpecialMissile.sound = load_wav('Resource/Sound/special_missile.wav')
+            SpecialMissile.sound.set_volume(50)
 
         self.collisionX1 = [0]*SPECIAL_MAX
         self.collisionY1= [0]*SPECIAL_MAX
@@ -359,6 +361,7 @@ class SpecialMissile:
                     self.show[i] = True
                     self.x[i] = showX
                     self.y[i] = showY
+                    self.sound.play()
                     break
                 i += 1
 
@@ -382,30 +385,28 @@ class SpecialMissile:
     def draw(self):
         i = 0
         while(i < SPECIAL_MAX):
-            if self.special_power == SPECIAL_MISSILE_A:
-                if self.show[i] == True:
-                    self.image.clip_draw(self.frame[i] * 162, 0, 162, 165, self.x[i] + 2, self.y[i]+ 110)
-                i += 1
+            if self.show[i] == True:
+                self.image.clip_draw(self.frame[i] * 162, 0, 162, 165, self.x[i] + 2, self.y[i]+ 110)
+            i += 1
 
     def showArea(self, showCheck):
         i = 0
         self.showCheck = showCheck
         while(i < SPECIAL_MAX):
             if self.show[i] == True:
-                if self.special_power == SPECIAL_MISSILE_A:
-                    self.collisionX1[i] = (self.x[i]) - 70
-                    self.collisionY1[i] = (self.y[i]+110) - 70
-                    self.collisionX2[i] = (self.x[i]) + 70
-                    self.collisionY2[i] = (self.y[i]+110) + 70
+                self.collisionX1[i] = (self.x[i]) - 70
+                self.collisionY1[i] = (self.y[i]+110) - 70
+                self.collisionX2[i] = (self.x[i]) + 70
+                self.collisionY2[i] = (self.y[i]+110) + 70
 
-                    # if self.collisionChecks[i] == True:
-                    #     draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
-                    # else :
-                    #     draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
-                    if self.showCheck == True:
-                        draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                # if self.collisionChecks[i] == True:
+                #     draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                # else :
+                #     draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                if self.showCheck == True:
+                    draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
 
-                    # draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                # draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
             i += 1
 
     def get_bb(self, index):
@@ -416,6 +417,17 @@ class SpecialMissile:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+
+    def get_view(self):
+        resultValue = False
+        i = 0
+        while(i < SPECIAL_MAX):
+            if self.show[i] == True:
+                resultValue = True
+                break
+            i += 1
+
+        return resultValue
 
 
 class PlayerMissile_S:
@@ -433,8 +445,8 @@ class PlayerMissile_S:
         if PlayerMissile_S.image == None:
             PlayerMissile_S.image = load_image('Resource/Missile/protect_missile.png')
         if PlayerMissile_S.missileSound == None:
-            PlayerMissile_S.missileSound = load_wav('Resource/Sound/missile_show.wav')
-            PlayerMissile_S.missileSound.set_volume(5)
+            PlayerMissile_S.missileSound = load_wav('Resource/Sound/missile_s_show.wav')
+            PlayerMissile_S.missileSound.set_volume(50)
 
         self.collisionX1 = 0
         self.collisionY1= 0
@@ -510,3 +522,120 @@ class PlayerMissile_S:
         self.collisionY1 = -1
         self.collisionX2 = -1
         self.collisionY2 = -1
+
+class SpecialMissile_S:
+    PLAYER_SPECIAL_MISSILE_SPEED_KMPH = 13.0                    # Km / Hour
+    PLAYER_SPECIAL_MISSILE_SPEED_MPM = (PLAYER_SPECIAL_MISSILE_SPEED_KMPH * 1000.0 / 60.0)
+    PLAYER_SPECIAL_MISSILE_SPEED_MPS = (PLAYER_SPECIAL_MISSILE_SPEED_MPM / 60.0)
+    PLAYER_SPECIAL_MISSILE_SPEED_PPS = (PLAYER_SPECIAL_MISSILE_SPEED_MPS * PIXEL_PER_METER)
+
+    collision_area_count = SPECIAL_MAX
+
+    image = None
+    sound = None
+
+    def __init__(self):
+        self.frame = [0]*SPECIAL_MAX
+        self.x = [0]*SPECIAL_MAX
+        self.y= [0]*SPECIAL_MAX
+        self.show= [0]*SPECIAL_MAX
+        i = 0
+        while(i < SPECIAL_MAX):
+            self.frame[i] = random.randint(0, 3)
+            i += 1
+
+        if SpecialMissile_S.image == None:
+            SpecialMissile_S.image = load_image('Resource/Missile/special_protect.png')
+        if SpecialMissile_S.sound == None:
+            SpecialMissile_S.sound = load_wav('Resource/Sound/special_missile.wav')
+            SpecialMissile_S.sound.set_volume(50)
+
+        self.collisionX1 = [0]*SPECIAL_MAX
+        self.collisionY1= [0]*SPECIAL_MAX
+        self.collisionX2 = [0]*SPECIAL_MAX
+        self.collisionY2= [0]*SPECIAL_MAX
+        self.collisionChecks= [0]*SPECIAL_MAX
+
+        for self.collisionCheck in self.collisionChecks:
+            self.collisionCheck = False
+
+        self.life_time = 0.0
+        self.total_frames = 0.0
+
+    def setShowCheck(self, showCheck):
+        self.showCheck = showCheck
+
+    def showSpecial(self, showX, showY):
+        i = 0
+        while(i < SPECIAL_MAX):
+                if self.show[i] == False:
+                    self.show[i] = True
+                    self.x[i] = showX
+                    self.y[i] = showY
+                    self.sound.play()
+                    break
+                i += 1
+
+    def update(self, frame_time):
+        self.life_time += frame_time
+        distance = SpecialMissile_S.PLAYER_SPECIAL_MISSILE_SPEED_PPS * frame_time
+        self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
+
+        i = 0
+        while(i < SPECIAL_MAX):
+            if self.show[i] == True:
+                if self.y[i] < CANVAS_HEIGHT:
+                    self.y[i] += distance
+                    # self.frame[i] = (self.frame[i] + 1) % 3
+                    self.frame[i] = int(self.total_frames) % 3
+                else:
+                    self.show[i] = False
+            i += 1
+
+
+    def draw(self):
+        i = 0
+        while(i < SPECIAL_MAX):
+            if self.show[i] == True:
+                self.image.clip_draw(self.frame[i] * 162, 0, 162, 165, self.x[i] + 2, self.y[i]+ 110)
+            i += 1
+
+    def showArea(self, showCheck):
+        i = 0
+        self.showCheck = showCheck
+        while(i < SPECIAL_MAX):
+            if self.show[i] == True:
+                self.collisionX1[i] = (self.x[i]) - 70
+                self.collisionY1[i] = (self.y[i]+110) - 70
+                self.collisionX2[i] = (self.x[i]) + 70
+                self.collisionY2[i] = (self.y[i]+110) + 70
+
+                # if self.collisionChecks[i] == True:
+                #     draw_rectangle_green(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                # else :
+                #     draw_rectangle_red(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+                if self.showCheck == True:
+                    draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+
+                # draw_rectangle(self.collisionX1[i],self.collisionY1[i],self.collisionX2[i],self.collisionY2[i])
+            i += 1
+
+    def get_bb(self, index):
+        return self.collisionX1[index], self.collisionY1[index], self.collisionX2[index], self.collisionY2[index]
+
+    def set_collisionCheck(self, index, value, change):
+        if change == True:
+            self.collisionChecks[index] = value
+        elif self.collisionChecks[index] == False:
+            self.collisionChecks[index] = value
+
+    def get_view(self):
+        resultValue = False
+        i = 0
+        while(i < SPECIAL_MAX):
+            if self.show[i] == True:
+                resultValue = True
+                break
+            i += 1
+
+        return resultValue

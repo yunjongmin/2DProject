@@ -76,3 +76,6 @@ class Obstacle:
             self.collisionChecks[index] = value
         elif self.collisionChecks[index] == False:
             self.collisionChecks[index] = value
+
+    def newCreateObstacle(self):
+        self.x, self.y = random.randint(0 + 64, CANVAS_WIDTH - 64), random.randint(CANVAS_HEIGHT, CANVAS_HEIGHT+CANVAS_HEIGHT/2)

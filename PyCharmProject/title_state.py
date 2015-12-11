@@ -5,18 +5,22 @@ from pico2d import *
 
 name = "TitleState"
 image = None
-
+bgm = None
 
 def enter():
-    global image
+    global image, bgm
     # image = load_image('Resource/Etc/start_logo.png')
     image = load_image('Resource/Etc/start_logo2.png')
+    bgm = load_music('Resource/Sound/logo_background.mp3')
+    bgm.set_volume(60)
+    bgm.repeat_play()
     pass
 
 
 def exit():
-    global image
+    global image, bgm
     del(image)
+    del(bgm)
     pass
 
 
