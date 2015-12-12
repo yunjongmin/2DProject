@@ -262,6 +262,29 @@ def missile_collide(a, front_index, b, back_index):
 
     return True
 
+def boss_missile_collide(a, front_index, b, back_index, bossRight):
+    left_a, bottom_a, right_a, top_a = a.get_bb(front_index)
+    if bossRight == True:
+        left_b, bottom_b, right_b, top_b = b.get_right_missile_bb(back_index)
+    else:
+        left_b, bottom_b, right_b, top_b = b.get_left_missile_bb(back_index)
+
+    if left_a == 0 and bottom_a == 0 and right_a == 0 and top_a == 0:
+        return False
+    if left_b == 0 and bottom_b == 0 and right_b == 0 and top_b == 0:
+        return False
+
+    if left_a > right_b :
+        return False
+    if right_a < left_b :
+        return False
+    if top_a < bottom_b :
+        return False
+    if bottom_a > top_b :
+        return False
+
+    return True
+
 
 def update(frame_time):
 
@@ -313,11 +336,30 @@ def update(frame_time):
             if mid_monster.missile_collisionChecks[i] == True:
                 mid_monster.set_missile_collisionCheck(i, False, True)
 
+    # 보스 몬스터 영역 초기화
+    for i in range(0, boss_monster.collision_area_count):
+        if boss_monster.collisionChecks[i] == True:
+            boss_monster.set_collisionCheck(i, False, True)
+
+    # 보스 몬스터 중간 미사일 영역 초기화
+    for i in range(0, boss_monster.missile_collision_area_count):
+        if boss_monster.missile_collisionChecks[i] == True:
+            boss_monster.set_missile_collisionCheck(i, False, True)
+
+    # 보스 몬스터 왼쪽 미사일 영역 초기화
+    for i in range(0, boss_monster.missile_collision_area_count):
+        if boss_monster.left_missile_collisionChecks[i] == True:
+            boss_monster.set_left_missile_collisionCheck(i, False, True)
+
+    # 보스 몬스터 오른쪽 미사일 영역 초기화
+    for i in range(0, boss_monster.missile_collision_area_count):
+        if boss_monster.right_missile_collisionChecks[i] == True:
+            boss_monster.set_right_missile_collisionCheck(i, False, True)
+
     # 특수 장애물 영역 초기화
     for i in range(0, obstacle.collision_area_count):
         if obstacle.collisionChecks[i] == True:
             obstacle.set_collisionCheck(i, False, True)
-
 
     if player.get_game_start() == True:
         # 캐릭터와 몬스터 충돌 체크
@@ -414,6 +456,15 @@ def update(frame_time):
                         mid_monster.newCreateMidMonster()
                         player.set_minusHp()
 
+        # 캐릭터와 보스 몬스터 충돌 체크
+        for i in range(0, player.collision_area_count):
+            for j in range(0, boss_monster.collision_area_count):
+                result = collide(player, i, boss_monster, j)
+                player.set_collisionCheck(i, result, False)
+                boss_monster.set_collisionCheck(j, result, False)
+                if result == True:
+                    player.set_minusHp()
+
         # 캐릭터 미사일과 중간 몬스터 충돌 체크
         for i in range(0, player_missile.collision_area_count):
             for mid_monster in mid_monsters:
@@ -457,6 +508,45 @@ def update(frame_time):
                     mid_monster.set_missile_collisionCheck(j, result, False)
                     if result == True:
                         mid_monster.newCreateMidMonsterMissile(j)
+
+        # 캐릭터와 보스 몬스터 중간 미사일과 충돌 체크
+        for i in range(0, player.collision_area_count):
+            for j in range(0, boss_monster.missile_collision_area_count):
+                result = missile_collide(player, i, boss_monster, j)
+                player.set_collisionCheck(i, result, False)
+                boss_monster.set_missile_collisionCheck(j, result, False)
+                if result == True:
+                    boss_monster.newCreateBossMonsterMissile(j)
+                    player.set_minusHp()
+
+        # 캐릭터_S 특수 미사일과 보스 중간 몬스터 미사일 충돌 체크
+        for i in range(0, player_special_missile_s.collision_area_count):
+            for j in range(0, boss_monster.missile_collision_area_count):
+                result = missile_collide(player_special_missile_s, i, boss_monster, j)
+                player_special_missile_s.set_collisionCheck(i, result, False)
+                boss_monster.set_missile_collisionCheck(j, result, False)
+                if result == True:
+                    boss_monster.newCreateBossMonsterMissile(j)
+
+        # 캐릭터와 보스 몬스터 왼쪽 미사일과 충돌 체크
+        for i in range(0, player.collision_area_count):
+            for j in range(0, boss_monster.missile_collision_area_count):
+                result = boss_missile_collide(player, i, boss_monster, j, False)
+                player.set_collisionCheck(i, result, False)
+                boss_monster.set_left_missile_collisionCheck(j, result, False)
+                if result == True:
+                    boss_monster.newCreateBossMonsterLeftMissile(j)
+                    player.set_minusHp()
+
+        # 캐릭터와 보스 몬스터 오른쪽 미사일과 충돌 체크
+        for i in range(0, player.collision_area_count):
+            for j in range(0, boss_monster.missile_collision_area_count):
+                result = boss_missile_collide(player, i, boss_monster, j, True)
+                player.set_collisionCheck(i, result, False)
+                boss_monster.set_right_missile_collisionCheck(j, result, False)
+                if result == True:
+                    boss_monster.newCreateBossMonsterRightMissile(j)
+                    player.set_minusHp()
 
          # 캐릭터와 특수 장애물 충돌 체크
         for i in range(0, player.collision_area_count):

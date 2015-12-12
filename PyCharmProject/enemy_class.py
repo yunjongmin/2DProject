@@ -682,6 +682,22 @@ class BossMonster:
         self.missile_collisionX2[index] = False
         self.missile_collisionY2[index] = False
 
+    def newCreateBossMonsterLeftMissile(self, index):
+        self.left_missile_show[index] = False
+        self.left_missile_collisionChecks[index] = False
+        self.left_missile_collisionX1[index] = False
+        self.left_missile_collisionY1[index] = False
+        self.left_missile_collisionX2[index] = False
+        self.left_missile_collisionY2[index] = False
+
+    def newCreateBossMonsterRightMissile(self, index):
+        self.right_missile_show[index] = False
+        self.right_missile_collisionChecks[index] = False
+        self.right_missile_collisionX1[index] = False
+        self.right_missile_collisionY1[index] = False
+        self.right_missile_collisionX2[index] = False
+        self.right_missile_collisionY2[index] = False
+
     def update(self, frame_time):
         # 몬스터
         self.life_time += frame_time
