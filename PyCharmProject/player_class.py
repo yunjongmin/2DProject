@@ -165,6 +165,11 @@ class Player:
             self.player = PLAYER_A
         elif event.type == SDL_KEYUP and event.key == SDLK_s:
             self.player = PLAYER_S
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_k:
+            if self.hp < 1:
+                self.x, self.y = 270, 200
+            self.hp = PLAYER_HP_MAX
+
 
 
     def get_bb(self, index):
@@ -470,8 +475,8 @@ class PlayerMissile_S:
     def update(self, frame_time, playerX, playerY):
         self.life_time += frame_time
         self.total_frames += FRAMES_PER_ACTION * ACTION_PER_TIME * frame_time
-        print(" self.life_time:", self.life_time)
-        print(" self.total_frames:", self.total_frames)
+        # print(" self.life_time:", self.life_time)
+        # print(" self.total_frames:", self.total_frames)
         if self.show == True:
             self.x = playerX
             self.y = playerY

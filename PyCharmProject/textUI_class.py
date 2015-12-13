@@ -10,8 +10,8 @@ class TextUI:
         self.playerScore
 
     def draw(self):
-        print(self.playerScore)
-        self.font.draw(690, 980, "점수:%d" % (self.playerScore))
+        # print(self.playerScore)
+        self.font.draw(690, 950, "점수:%d" % (self.playerScore))
         pass
 
     def set_playerScore(self, score):
