@@ -82,7 +82,7 @@ manifest_template = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 mygame = Target(
     script ="mygame.py",
     dest_base = "DragonFlight",
-    icon_resources=[(1, r"pico2d.ico")],
+    icon_resources=[(1, r"Resource/Icon/dragon_icon.ico")],
     other_resources = [(RT_MANIFEST, 1, (manifest_template % dict(prog="mygame", level="asInvoker")).encode("utf-8"))]
     )
 
@@ -103,71 +103,71 @@ import os
 index = 0
 
 resources = []
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Background')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Background', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Background', f))
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Character')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Character', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Character', f))
-
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Etc')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Etc', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Etc', f))
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Explosion')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Explosion', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Explosion', f))
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Missile')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Missile', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Missile', f))
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Monster')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Monster', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Monster', f))
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Sound')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Sound', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Sound', f))
-
-resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Font')
-for f in resourcesArray:
-    if index == 0:
-        resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Font', f)]
-        index = index + 1
-    else:
-        resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Font', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Background')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Background', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Background', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Character')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Character', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Character', f))
+#
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Etc')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Etc', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Etc', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Explosion')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Explosion', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Explosion', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Missile')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Missile', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Missile', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Monster')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Monster', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Monster', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Sound')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Sound', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Sound', f))
+#
+# resourcesArray = os.listdir('I:/2DProject/PyCharmProject/Resource/Font')
+# for f in resourcesArray:
+#     if index == 0:
+#         resources = [os.path.join('I:/2DProject/PyCharmProject/Resource/Font', f)]
+#         index = index + 1
+#     else:
+#         resources.append(os.path.join('I:/2DProject/PyCharmProject/Resource/Font', f))
 
 
 if platform.architecture()[0] == '32bit':

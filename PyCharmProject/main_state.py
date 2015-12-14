@@ -16,7 +16,7 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 1000
 MISSILE_MAX = 100
 COLLISION_AREA_3 = 3
-BOSS_SHOW_SCORE = 10000
+BOSS_SHOW_SCORE = 5000
 
 name = "MainState"
 
@@ -430,7 +430,7 @@ def update(frame_time):
                     for j in range(0, monster.collision_area_count):
                         result = collide(player_special_missile, i, monster, j)
                         if result == True:
-                            player.plus_score(monster.get_score())
+                            player.plus_score(monster.get_special_score()*enemy_class.MONSTER_HP_MAX)
                             monster.newCreateMonster()
                         player_special_missile.set_collisionCheck(i, result, False)
                         monster.set_collisionCheck(j, result, False)
@@ -505,7 +505,7 @@ def update(frame_time):
                     for j in range(0, mid_monster.collision_area_count):
                         result = collide(player_special_missile, i, mid_monster, j)
                         if result == True:
-                            player.plus_score(mid_monster.get_score())
+                            player.plus_score(mid_monster.get_special_score()*enemy_class.MID_MONSTER_HP_MAX)
                             mid_monster.newCreateMidMonster()
                         player_special_missile.set_collisionCheck(i, result, False)
                         mid_monster.set_collisionCheck(j, result, False)
@@ -637,19 +637,20 @@ def update(frame_time):
             player_special_missile.update(frame_time)
             player_special_missile_s.update(frame_time)
             player.update(frame_time)
-
+        delay(0.02)
         # explosion.update(frame_time)
     else:
         textUI.set_playerScore(player.get_score())
         background.update(frame_time)
+        boss_monster.update(frame_time)
         if player.get_game_start() == True:
             player_missile.update(frame_time)
             player_protect_missile.update(frame_time, player.get_playerX(), player.get_playerY())
             player_special_missile.update(frame_time)
             player_special_missile_s.update(frame_time)
             player.update(frame_time)
+        delay(0.04)
 
-    delay(0.03)
 
 def draw(frame_time):
     clear_canvas()
@@ -689,6 +690,7 @@ def draw(frame_time):
             player.draw()
         background.change_clear_bgm()
         textUI.draw()
+        boss_monster.draw()
         background.gameclear_image.clip_draw(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 
         # print("게임클리어")

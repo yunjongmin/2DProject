@@ -14,7 +14,7 @@ MID_MONSTER_LIMIT_MOVE = 100
 
 MONSTER_HP_MAX = 3
 MID_MONSTER_HP_MAX = 6
-BOSS_MONSTER_HP_MAX = 100
+BOSS_MONSTER_HP_MAX = 50
 
 PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
 TIME_PER_ACTION = 0.5
@@ -165,7 +165,7 @@ class Monster:
         i = 0
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
-                self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.missile_x[i] - 2, self.missile_y[i] - 30)
+                self.image_missile.clip_draw(self.missile_frame * 22, 0, 22, 14, self.missile_x[i] - 2, self.missile_y[i] - 30)
             i += 1
 
         # 폭발관련
@@ -285,6 +285,8 @@ class Monster:
         else:
             return self.socre
 
+    def get_special_score(self):
+        return 100
 
     def get_hp(self):
         return self.hp
@@ -451,7 +453,7 @@ class MidMonster:
         i = 0
         while(i < MISSILE_MAX):
             if self.missile_show[i] == True:
-                self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.missile_x[i] - 2, self.missile_y[i] - 30)
+                self.image_missile.clip_draw(self.missile_frame * 22, 0, 22, 14, self.missile_x[i] - 2, self.missile_y[i] - 30)
             i += 1
 
         # 폭발관련
@@ -574,6 +576,9 @@ class MidMonster:
         else:
             return self.socre
 
+    def get_special_score(self):
+        return 100
+
 class BossMonster:
     FLY_SPEED_KMPH = 13.0                    # Km / Hour
     FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
@@ -668,7 +673,7 @@ class BossMonster:
         self.explosion_frame = 0
 
         if BossMonster.image_explosion == None:
-            self.image_explosion = load_image('Resource/Explosion/mid_monster_explosion.png')
+            self.image_explosion = load_image('Resource/Explosion/boss_monster_explosion.png')
 
         self.life_time = 0.0
         self.total_frames = 0.0
@@ -683,7 +688,6 @@ class BossMonster:
         self.gameState = False
         self.showExplosion(self.x, self.y)
         BossMonster.dieSound.play()
-
 
     def newCreateBossMonsterMissile(self, index):
         self.missile_show[index] = False
@@ -788,16 +792,16 @@ class BossMonster:
             i = 0
             while(i < MISSILE_MAX):
                 if self.missile_show[i] == True:
-                    self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.missile_x[i] - 2, self.missile_y[i] - 30)
+                    self.image_missile.clip_draw(self.missile_frame * 22, 0, 22, 14, self.missile_x[i] - 2, self.missile_y[i] - 30)
                 if self.left_missile_show[i] == True:
-                    self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.left_missile_x[i] - 2, self.left_missile_y[i] - 30)
+                    self.image_missile.clip_draw(self.missile_frame * 22, 0, 22, 14, self.left_missile_x[i] - 2, self.left_missile_y[i] - 30)
                 if self.right_missile_show[i] == True:
-                    self.image_missile.clip_draw(self.missile_frame * 15, 0, 15, 9, self.right_missile_x[i] - 2, self.right_missile_y[i] - 30)
+                    self.image_missile.clip_draw(self.missile_frame * 22, 0, 22, 14, self.right_missile_x[i] - 2, self.right_missile_y[i] - 30)
                 i += 1
 
         # 폭발관련
         if self.explosion_show == True:
-            self.image_explosion.clip_draw(self.explosion_frame * 55, 0, 55, 81, self.explosion_x, self.explosion_y)
+            self.image_explosion.clip_draw(self.explosion_frame * 500, 0, 500, 500, self.explosion_x, self.explosion_y)
 
     def showArea(self, showCheck):
         self.showCheck = showCheck
