@@ -36,4 +36,4 @@ Mon Nov 9 18:36:31 2015 +0900 code arrangement previous
 Mon Nov 9 18:32:46 2015 +0900 code arrangement previous
 Tue Nov 3 04:14:47 2015 +0900 collision 70%
 Fri Oct 30 12:56:17 2015 +0900 monster missile add
-Wed Oct 28 02:34:57 2015 +0900 first commit
+Wed Oct 28 02:34:57 2015 +0900 first commitd
