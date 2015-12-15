@@ -228,7 +228,6 @@ def handle_events(frame_time):
                 collisionRectShow = True
         else:
             player.handle_event(event)
-    pass
 
 
 def collide(a, front_index, b, back_index):
